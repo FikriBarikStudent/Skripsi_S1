@@ -1,0 +1,332 @@
+\documentclass{skripsimathugm}
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk data Skripsi (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\titleind{
+Interpolasi Spline Kubik Monoton
+}
+
+\titleeng{
+Monotone Cubic Spline Interpolation
+}
+
+\fullname{Muhammad Fikri Al-Barik}
+\NIM{19/442576/PA/19325}
+\yearenrollment{2019}
+\examdate{26 Juni 2023}
+\degree{Sarjana Matematika}
+\yearsubmit{2023}
+\firstsupervisor{Dr. Sumardi, M.Si.}
+\firstexaminer{Prof. Imam Solekhudin, S.Si., M.Si., Ph.D.}
+\secondexaminer{Dr. Zenith Purisha, S.Si., M.Sc.}
+\thirdexaminer{Hadrian Andradi, S.Si., M.Sc., Ph.D.}
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\begin{document}
+\cover\titlepage
+
+% \approvalpage
+% \declarepage
+%Setelah Anda selesai Ujian Akhir Skripsi, scan halaman pengesahan yang telah ditandatangani dosen pembimbing dan penguji, scan juga halaman pernyataan yang telah Anda tandatangani. Selanjutnya simpan hasil scan tersebut dalam bentuk PDF dengan nama pengesahanskripsi.pdf dan pernyataan.pdf (file disimpan di folder yang sama dengan folder dimana file Skripsi.tex tersimpan)
+%Hilangkan karakter % sebelum perintah "\approvalpagescan" dan "\declarepage" di bawah ini, dan tambahkan karakter % sebelum perintah "\approvalpage" di atas.
+\approvalpagescan
+\declarepagescan
+
+%-----------------------------------------------------------------
+%Halaman Persembahan (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\acknowledment
+\begin{flushright}
+\Large\emph\cal{Skripsi ini saya persembahkan untuk \\ayah dan ibu saya tercinta.}
+\end{flushright}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+%Halaman Motto (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\motto
+\emph{"If there is roughness in anything it is bound to disgrace it."}
+\begin{flushright}
+ Al-Adab Al-Mufrad (466)
+\end{flushright}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk Prakata (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\preface
+% Prakata merupakan pernyataan resmi untuk menyampaikan ucapan terima kasih oleh penulis kepada pihak lain, misalnya kepada para pimpinan institusi, pembimbing, penguji, dan semua pihak yang terkait dalam penyelesaian tugas akhir termasuk orang tua dan penyandang dana. Nama harus ditulis secara lengkap termasuk gelar akademik dan harus dihindari ucapan terima kasih kepada pihak yang tidak terkait. Bahasa yang digunakan harus mengikuti kaidah bahasa Indonesia yang baku.  Prakata diakhiri dengan mencantumkan kota dan tanggal penulisan diikuti di bawahnya dengan kata "Penulis".
+
+% Prakata merupakan pernyataan resmi untuk menyampaikan ucapan terima kasih oleh penulis kepada pihak lain, misalnya kepada para pimpinan institusi, pembimbing, penguji, dan semua pihak yang terkait dalam penyelesaian tugas akhir termasuk orang tua dan penyandang dana. Nama harus ditulis secara lengkap termasuk gelar akademik dan harus dihindari ucapan terima kasih kepada pihak yang tidak terkait. Bahasa yang digunakan harus mengikuti kaidah bahasa Indonesia yang baku.  Prakata diakhiri dengan mencantumkan kota dan tanggal penulisan diikuti di bawahnya dengan kata "Penulis".
+
+Dengan memanjatkan puji dan syukur kehadirat Allah SWT yang telah melimpahkan rahmat, taufik, dan hidayah sehingga penulis dapat menyelesaikan skripsi ini dengan judul "Interpolasi Spline Kubik Monoton", sebagai salah satu syarat untuk memperoleh derajat Sarjana Matematika Program Sarjana Program Studi Matematika Universitas Gadjah Mada.
+
+Penulis menyadari bahwa skripsi ini tidak akan mungkin terselesaikan tanpa adanya dukungan, bantuan, bimbingan, dan nasehat dari berbagai macam pihak selama menyusun skripsi ini. Oleh karena itu, penulis ingin menyampaikan kata terima kasih yang sebesar-besarnya kepada:
+\begin{enumerate}
+    \item Bapak Prof. Dr.Eng. Kuwat Triyana, M.Si., selaku Dekan Fakultas MIPA.
+    \item Bapak Dr. Sumardi, M.Si., selaku dosen pembimbing skripsi atas segala arahan dan masukannya selama penulis menyusun skripsi ini sehingga bisa diselesaikan dengan baik.
+    \item Bapak Dr. Budi Surodjo, M.Si., selaku dosen pembimbing akademik atas bimbingannya selama penulis menempuh pembelajaran di Fakultas MIPA Universitas Gadjah Mada.
+    \item Seluruh staff pengajar Fakultas MIPA yang telah memberi ilmu yang tak ternilai selama penulis menempuh pembelajaran di Fakultas MIPA Universitas Gadjah Mada.
+    \item Kedua orang tua penulis, Noziandra dan Lisnamidyani, yang selalu memberi kasih sayang, doa, dan nasihat, serta selalu sabar dalam menghadapi penulis selama ini. Penulis berharap bisa menjadi sosok yang diharapkan oleh kedua orang tua penulis.
+    \item Kakek dan nenek penulis yang telah ikut berperan dalam membesarkan penulis menjadi sebagai mana penulis sekarang.
+    \item Kakak dan adik penulis yang telah ikut mendukung penulis selama ini.
+    \item Teman-teman matemasika angkatan 2019 yang telah membantu penulis selama menempun pembelajaran di Fakultas MIPA Universitas Gadjah Mada.
+    \item Staff preksu yang telah menolong penulis selama ada di Jogja, terutama pada hari senin dan kamis.
+    \item Semua pihak yang tidak bisa penulis sebut satu per satu, yang telah memberikan doa sehingga dapat terselasaikannya skripsi ini.
+\end{enumerate}
+
+Penulis menyadari bahwa di dalam skripsi ini masih banyak kekurangan, untuk itu penulis sangat mengharapkan kritik dan sarang yang bersifat membangun. Penulis berharap skripsi ini dapat bermanfaat.
+\vspace{0.8cm}
+
+\begin{tabular}{p{7cm}c}
+&Yogyakarta, 2 Agustus 2023\\
+&\\
+&\\
+&Muhammad Fikri Al-Barik
+\end{tabular}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+%Daftar Isi (TIDAK PERLU DIUBAH)
+%-----------------------------------------------------------------
+\newpage\phantomsection\addcontentsline{toc}{chapter}{DAFTAR ISI}
+\makeatletter\renewcommand\l@chapter[2]{\ifnum \c@tocdepth >\z@\addpenalty\@secpenalty\addvspace{0em}\setlength\@tempdima{1.4em}\begingroup\parindent \z@ \rightskip \@pnumwidth\parfillskip -\@pnumwidth\leavevmode \bfseries\advance\leftskip\@tempdima\hskip -\leftskip#1\nobreak\ \leaders\hbox{$\m@th\mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfil\nobreak\hb@xt@\@pnumwidth{\hss #2}\par\endgroup\fi}\makeatother
+\begin{singlespacing}\tableofcontents\end{singlespacing}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Daftar Tabel (JIKA DIPERLUKAN, HAPUS KARAKTER % SEBELUM \newpage dan \begin)
+%-----------------------------------------------------------------
+\newpage\phantomsection\addcontentsline{toc}{chapter}{DAFTAR TABEL}
+\begin{singlespacing}\listoftables\end{singlespacing}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Daftar Gambar (JIKA DIPERLUKAN, HAPUS KARAKTER % SEBELUM \newpage dan \begin)
+%-----------------------------------------------------------------
+\newpage\phantomsection\addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
+\begin{singlespacing}\listoffigures\end{singlespacing}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+%Daftar Lambang (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\lambang
+\begin{tabular}{cp{10.5cm}}
+    $x\in A$ & : $x$ adalah anggota dari himpunan $A$\\
+    $\R$ & : himpunan bilangan real\\
+    $\Leftrightarrow$ & : jika dan hanya jika \\
+    $\Rightarrow$ & : jika maka\\
+    $\Sigma$ & : jumlahan seluruhnya \\
+    $\blacksquare$ & : akhir dari bukti \\
+    $\Pi$ & : perkalian seluruhnya\\
+    $sign(x)$ & : tanda dari bilangan real $x$\\
+    $C^n$ & : himpunan fungsi yang memiliki $n$ turunan kontinu\\
+    $||v||_\infty$ & : $\max(|v_1|,|v_2|,\dots,|v_n|)$\\
+    $f_i$ & : $f(x_i)$ \\
+    $\dot{f}_i$ & : pendekatan turunan $f$ di titik $x_i$\\
+    $\lambda_i$ & : $\frac{h_{i+1}}{h_i+h_{i+1}}$\\
+    $\dot{f_i}$ & : $f'(x_i)$\\
+    $\mu_i$ & : $\frac{h_i}{h_i+h_{i+1}}$\\
+    $h_i$ & : $x_{i+1}-x_i$\\
+    $\alpha_i$ & : $\frac{\dot{f_i}}{m_i}$\\
+    $\hat{h}$ & : $\max(h_0,\dots,h_{n-1})$\\
+    $\beta_i$ & : $\frac{\dot{f_{i+1}}}{m_i}$\\
+    $m_i$ & : $\frac{f_{i+1}-f_i}{h_i}$\\
+    $\mathcal{H} \{x_0,\dots,x_n\}$ & : $[\max(x_0,\dots,x_n),\min(x_0,\dots,x_n)]$
+\end{tabular}
+
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+%Disini awal masukan Intisari (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\begin{abstractind}
+% Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari Intisari.
+Metode interpolasi spline kubik adalah metode interpolasi yang menghasilkan interpolasi dengan regularitas $C^2$. Pada umumnya, polinomial hasil interpolasi spline kubik belum tentu memiliki sifat monoton. Hasil interpolasi yang tidak monoton dapat mengakibatkan turunnya akurasi dikarenakan adanya osilasi pada hasil interpolasi. Osilasi dapat terjadi ketika dilakukan interpolasi pada fungsi yang tidak kontinu. Pada penelitian ini dikaji metode interpolasi bersifat monoton untuk mengatasi turunnya akurasi ketika menginterpolasi fungsi yang tidak kontinu.
+% Pada hasil interpolasi di sekitar titik tidak kontinu dapat terjadi osilasi dikarenakan fenomena Gibbs yang mengakibatkan menurunnya akurasi di sekitar titik tersebut. Pada penelitian ini dikaji metode interpolasi yang menghasilkan interpolasi bersifat monoton untuk mengatasi turunnya akurasi ketika menginterpolasi fungsi yang memiliki titik tidak kontinu.
+
+\end{abstractind}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk Abstract (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\begin{abstracteng}
+% Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract Abstract.
+The cubic spline interpolation method is an interpolation method that produces an interpolation with $C^2$ regularity. In general, polynomials resulting from cubic spline interpolation do not necessarily have monotone properties. Interpolation results that are not monotonous can result in decreased accuracy due to oscillations in the interpolation results. Oscillations can occur when interpolating a function that is not continuous. In this research, the monotone interpolation method is studied to overcome the decrease in accuracy when interpolating discontinuous functions.
+\end{abstracteng}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk Bab (ISI BAB I DAPAT DIEDIT DI FILE Bab1.tex,
+%ISI BAB II DAPAT DIEDIT DI FILE Bab2.tex, dst...)
+%-----------------------------------------------------------------
+\input{Bab1.tex}
+\input{Bab2.tex}
+\input{Bab3.tex}
+\input{Bab4.tex}
+\input{Bab5.tex}
+\input{Bab6.tex}
+%-----------------------------------------------------------------
+%Disini akhir masukan Bab
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk Daftar Pustaka (ISI SESUAI DENGAN DATA ANDA!)
+%-----------------------------------------------------------------
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
+
+\bibitem[Howard(2014)]{howard}
+Anton, H., dan Rorres, C., 2014, \emph{Elementary Linear Algebra: Applications Version}, Eleventh Edition, John Wiley and Sons, New York.
+
+\bibitem[Olver(2018)]{olver}
+Olver, P. J. , dan Shakiban, C, 2018, \emph{Applied Linear Algebra}, Second Edition, Cham: Springer International Publishing.
+
+\bibitem[Atkinson(1978)]{atkinson}
+Atkinson, K. E., 1978, \emph{An Introduction to Numerical Analysis}, Second Edition, John Wiley \& Sons, New York.
+
+\bibitem[Burden(2010)]{burden}
+Burden, R.L., dan Faires, J.D., 2010, \emph{Numerical Analysis}, Ninth Edition, Brooks/Cole, Cengage Learning, Boston.
+
+\bibitem[Bartle(2011)]{bartle}
+Bartle, G. B., dan Sherbert, D. R., 2011, \emph{Introduction to Real Analysis}, Fourth Edition,
+John Wiley and Sons, New York.
+
+\bibitem[Aràndiga(2022)]{aràndiga}
+Aràndiga, F., Baeza, A., dan  Yáñez, D.F., 2022.
+\emph{''Monotone cubic spline interpolation for functions with a strong gradient''},
+\emph{Applied Numerical Mathematics} Vol 172, 591--607
+
+\bibitem[Fritsch(1980)]{fritsch}
+Fritsch, F. N., dan Carlson, R. E., 1980. \emph{''Monotone Piecewise Cubic Interpolation''}, \emph{SIAM Journal on Numerical Analysis} Vol 17 No. 2 , 238–-246.
+
+\bibitem[Stoer(2011)]{stoer}
+Stoer, J., dan Bulirsch, R., 2002, \emph{Introduction to numerical analysis}, Springer, New York.
+
+\bibitem[Thomas(2010)]{thomas}
+Thomas Jr., G.B., Weir, M.D., dan Hass, J., 2010, \emph{Thomas’ Calculus}, Twelfth Edition, Pearson, Boston, New York.
+
+\bibitem[Boor(1978)]{boor}
+de Boor, C., 1978. \emph{A Practical Guide to Splines}, New York: Springer Verlag.
+
+\bibitem[Kershaw(1970)]{kershaw}
+Kershaw, D., 1970, \emph{''Inequalities on the Elements of the Inverse of a Certain Tridiagonal Matrix''}, \emph{Mathematics of Computation} Vol 24 No. 109 , 155–-158.
+
+\bibitem[Kershaw(1972)]{kershaw1972}
+Kershaw, D., 1972, \emph{''The Orders of Approximation of the First Derivative of Cubic Splines at the Knots''}, \emph{Mathematics of Computation} Vol 26 No. 117 , 191–-198.
+
+\bibitem[Fritsch(1984)]{fritschMN}
+Fritsch, F. N., dan Butland, J., 1984. \emph{''A Method for Constructing Local Monotone
+Piecewise Cubic Interpolants''}, \emph{SIAM Journal on Scientific and Statistical Computing} Vol 5 No. 2 , 300--304.
+
+\bibitem[Aràndiga(2013)]{arandigaOA}
+Aràndiga, F., 2013.
+\emph{''On the Order of Nonuniform Monotone Cubic Hermite Interpolants''},
+\emph{SIAM Journal on Numerical Analysis} Vol 51 no. 5, 2613--2633
+
+\bibitem[Aràndiga(2019)]{arandigaMN}
+Aràndiga, F., dan Yáñez, D.F., 2019.
+\emph{''Third-order accurate monotone cubic Hermite interpolants''},
+\emph{Applied Mathematics Letters} Vol 94, 73--79
+
+\bibitem[Bird(2020)]{bird}
+Bird., J., 2020., \emph{Monotone Cubic Interpolation},\\\href{http://jbrd.github.io/2020/12/27/monotone-cubic-interpolation.html}
+{\mbox{http://jbrd.github.io/2020/12/27/monotone-cubic-interpolation.html}}. Diakses 25 Desember 2022.
+
+
+\end{thebibliography}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+%Disini awal masukan untuk Lampiran (JIKA DIPERLUKAN)
+%-----------------------------------------------------------------
+\appendix
+
+\chapter{SKRIP SHELL SETUP ENVIRONMENT}
+\lstset{frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{setup.sh}
+
+\chapter{SKRIP PYTHON HERMITE KUBIK AND PLOT}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{hermiteKubikPlot.py}
+
+\chapter{SKRIP PYTHON FUNCTION DEFINITION}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{functionDefinition.py}
+
+\chapter{SKRIP PYTHON CHECK SUFFICIENT CONDISION MONOTONE}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{checkConditionMonotone.py}
+
+\chapter{SKRIP PYTHON NONLINEAR METHOD}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{nonlinearMethod.py}
+
+\chapter{SKRIP PYTHON SPLINE KUBIK}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{splineKubik.py}
+
+\chapter{SKRIP PYTHON SPLINE KUBIK DENGAN ORDER AKURASI MAKSIMUM}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{optimumOrder.py}
+
+\chapter{SKRIP PYTHON SPLINE KUBIK DENGAN REGULARITAS MAKSIMUM}
+\lstset{language=python, frame=single}
+\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=6pt, xrightmargin=8pt, rulesepcolor=\color{black}}
+\lstset{keywordstyle=\color{blue},breaklines=true, breakindent=27pt}
+\lstinputlisting{optimumRegularity.py}
+
+
+% \chapter{CONTOH LAMPIRAN TABEL}
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=14cm]{ASCIIreguler}
+% \end{figure}
+%-----------------------------------------------------------------
+%-----------------------------------------------------------------
+\end{document}

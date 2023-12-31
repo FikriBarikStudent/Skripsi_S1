@@ -1,0 +1,54 @@
+\chapter{KESIMPULAN}
+
+% Kesimpulan yang dapat diambil penulis ...
+Dari metode interpolasi yang telah dibahas dapat diambil kesimpulan sebagai berikut:
+
+\begin{enumerate}
+    
+    \item Pada interval $[x_i,x_{i+1}]$ syarat cukup hasil interpolasi Hermite kubik monoton adalah jika $0 \leq \alpha_i, \beta_i \leq 3$,
+    maka polinomial Hermite kubik yang dihasilkan memiliki sifat monoton.
+
+    % \item Tingkat akurasi order keempat adalah order akurasi optimal dariMe interpolasi Hermite kubik yang terjadi ketika $\dot{f}_i$ dan $\dot{f}_{i+1}$ memiliki tingkat akurasi lebih dari tiga.
+
+    \item Metode interpolasi Hermite kubik memiliki tingkat akurasi $\min(4, q_i+1, q_{i+1}+1)$ dengan
+    $$\dot{f_i}=f'(x_i) + O(h^{q_i}),$$ 
+    dan $$\dot{f_{i+1}}=f'(x_{i+1}) + O(h^{q_{i+1}}).$$
+
+    \item Interpolasi spline kubik monoton berbasis polinomial Hermite kubik yang menginterpolasi titik $\{(x_i,f(x_i)): i = 0,1,\dots,n\}$ memiliki polinomial spline kubik monoton berupa
+    \begin{equation*}
+    P_i(x)=f_i + \dot{f}_i(x-x_i) + \frac{(m_i-\dot{f}_i)}{h_i}(x-x_i)^2 + \frac{(\dot{f}_{i+1}+\dot{f}_i-2m_i)}{h_i^2}(x-x_i)^2(x-x_{i+1}),
+\end{equation*}
+    dengan $\dot{f}_i$ dan $\dot{f}_{i+1}$ adalah solusi dari 
+    \begin{equation*}
+    \begin{bmatrix}
+        2 & \mu_1 \\
+        \lambda_2 & 2 & \mu_2 \\
+        & \lambda_3 & 2 & \mu_3 \\
+        && \ddots & \ddots & \ddots \\
+        &&&\lambda_{n-3} & 2 & \mu_{n-3} \\
+        &&&&\lambda_{n-2} & 2
+    \end{bmatrix}
+    \begin{bmatrix}
+        \dot{f_2} \\
+        \dot{f_3} \\
+        \dot{f_4} \\
+        \vdots \\
+        \dot{f_{n-2}} \\
+        \dot{f_{n-1}} 
+    \end{bmatrix}=\begin{bmatrix}
+        3(\lambda_1m_1 + \mu_1m_2) - \lambda_1f_1' \\
+        3(\lambda_{2}m_{2} + \mu_{2}m_3) \\
+        3(\lambda_{3}m_{3} + \mu_{3}m_4) \\
+        \vdots \\
+        3(\lambda_{n-3}m_{n-3} + \mu_{n-3}m_{n-2}) \\
+        3(\lambda_{n-2}m_{n-2} + \mu_{n-2}m_{n-1}) - \mu_{n-2}f_n' \\
+    \end{bmatrix},
+\end{equation*}
+    serta $\dot{f}_0 = f'(x_0)$ dan $\dot{f}_n = f'(x_n)$.
+
+    \item Metode interpolasi spline kubik dengan basis polinomial Hermite kubik memiliki tingkat akurasi order keempat jika setiap subinterval panjangnya sama. Apabila panjang setiap subinterval berbeda, maka interpolasi yang diperoleh memiliki tingkat akurasi order ketiga.
+
+    \item Hasil turunan numerik dengan menggunakan metode nonlinear $\dot{f}^{FB}$ dan metode nonlinear $\dot{f}^{AY}$ memenuhi syarat cukup monoton polinomial Hermite kubik.
+
+    \item Hasil turunan numerik yang diperoleh dari metode nonlinear $\dot{f}^{FB}$ memiliki tingkat akurasi order pertama sedangkan hasil turunan numerik yang diperoleh dari metode nonlinear $\dot{f}^{AY}$ memiliki tingkat akurasi order kedua.
+\end{enumerate}

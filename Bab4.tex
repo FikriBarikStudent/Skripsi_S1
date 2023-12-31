@@ -1,0 +1,1542 @@
+\chapter{SPLINE KUBIK MONOTON}
+Pada bab ini akan disampaikan hal-hal berkaitan dengan pembuatan interpolasi spline kubik yang monoton. 
+
+\section{Interpolasi Spline Kubik Monoton}
+
+Setelah diperoleh syarat-syarat cukup sebuah polinomial interpolasi Hermite kubik monoton pada suatu interval selanjutnya akan dibentuk polinomial spline kubik $P_i(x)$ yang memenuhi kondisi
+\begin{align}
+    P_i^{(k)}(x_{i+1}) = P_{i+1}^{(k)}(x_{i+1}), \: k=0,1,2,\label{3.10} \\
+    P_1'(x_1) = \dot{f_1} := f'(x_1) = f_1', \label{3.11} \\
+    P_{n-1}'(x_n) = \dot{f_n} := f'(x_n) = f_n' \label{3.12}
+\end{align}
+dengan $i=1,~2,\dots,~n-2$.
+
+Diperhatikan polinomial Hermite kubik yang telah diperoleh sebelumnya telah memenuhi kondisi Persamaan \eqref{3.10}, \eqref{3.11}, dan \eqref{3.12} untuk $k=0,1$. Selanjutnya polinomial Hermite kubik pada Persamaan \eqref{P_i} tersebut akan digunakan untuk memperoleh polinomial yang memenuhi kondisi Persamaan \eqref{3.10} untuk kasus $k=2$.
+
+Dari Persamaan \eqref{P_i} yang merupakan polinomial Hermite kubik $P_i(x)$ untuk $x \in [x_i,x_{i+1}]$, diperoleh $P_i''(x)$ sebagai berikut
+\begin{equation}
+    P_i''(x) = \frac{2(m_i-\dot{f_i})}{h_i} + \frac{4(\dot{f_{i+1}}+\dot{f_i}-2m_i)}{h_i^2}(x-x_i) +\frac{2(\dot{f_{i+1}}+\dot{f_i}-2m_i)}{h_i^2}(x-x_{i+1}),
+\end{equation}
+sedemikian hingga
+\begin{align*}
+    P_i''(x_{i+1}) &= \frac{2(m_i-\dot{f_i})}{h_i} + \frac{4(\dot{f_{i+1}}+\dot{f_i}-2m_i)}{h_i^2}(x_{i+1}-x_i) \\
+    &+\frac{2(\dot{f_{i+1}}+\dot{f_i}-2m_i)}{h_i^2}(x_{i+1}-x_{i+1})\\
+    &=\frac{2(m_i-\dot{f_i})}{h_i}+\frac{4(\dot{f_{i+1}}+\dot{f_i}-2m_i)}{h_i^2}h_i\\
+    &=2\frac{\dot{f_i}}{h_i} + 4\frac{\dot{f_{i+1}}}{h_i} - 6\frac{m_i}{h_i},
+\end{align*}
+dan
+\begin{align*}
+    P_{i+1}''(x_{i+1}) &= \frac{2(m_{i+1}-\dot{f_{i+1}})}{h_{i+1}} + \frac{4(\dot{f_{i+2}}+\dot{f_{i+1}}-2m_{i+1})}{h_{i+1}^2}(x_{i+1}-x_{i+1}) \\
+    &+\frac{2(\dot{f_{i+2}}+\dot{f_{i+1}}-2m_{i+1})}{h_{i+1}^2}(x_{i+1}-x_{i+2})\\
+    &=\frac{2(m_{i+1}-\dot{f_{i+1}})}{h_{i+1}}+\frac{2(\dot{f_{i+2}}+\dot{f_{i+1}}-2m_{i+1})}{h_{i+1}^2}h_{i+1}\\
+    &=-4\frac{\dot{f_{i+1}}}{h_{i+1}} - 2\frac{\dot{f_{i+2}}}{h_{i+1}} + 6\frac{m_{i+1}}{h_{i+1}}.
+\end{align*}
+
+Berdasarkan Persamaan \eqref{3.10} untuk kasus $k=2$ diperoleh
+\begin{align*}
+        &&P_i''(x_{i+1}) &= P_{i+1}''(x_{i+1}), \\
+        &\Rightarrow& 
+        2\frac{\dot{f_i}}{h_i} + 4\frac{\dot{f_{i+1}}}{h_i} - 6\frac{m_i}{h_i} &= -4\frac{\dot{f_{i+1}}}{h_{i+1}} - 2\frac{\dot{f_{i+2}}}{h_{i+1}} + 6\frac{m_{i+1}}{h_{i+1}}, \\
+        &\Rightarrow&
+        \frac{\dot{f_i}}{h_i} + 2\left( \frac{1}{h_i} + \frac{1}{h_{i+1}} \right)\dot{f_{i+1}} + \frac{\dot{f_{i+2}}}{h_{i+1}} &= 3\left( \frac{m_i}{h_i} + \frac{m_{i+1}}{h_{i+1}} \right),\\
+        &\Rightarrow&\frac{h_{i+1}}{h_i + h_{i+1}}\dot{f_i} + 2\dot{f_{i+1}} + \frac{h_i}{h_i + h_{i+1}}\dot{f_{i+2}} &= 3\left( \frac{h_{i+1}}{h_i + h_{i+1}}m_i + \frac{h_i}{h_i + h_{i+1}}m_{i+1} \right).
+        % \frac{h_ih_{i+1}}{h_i + h_{i+1}}&
+\end{align*}
+Selanjutnya apabila ditambahkan kondisi pada Persamaan \eqref{3.11} dan \eqref{3.12} dengan $\dot{f_1} = f_1'$ dan $\dot{f_n} = f_n'$ diperoleh
+\begin{align*}
+2\dot{f_{2}} + \frac{h_1}{h_1 + h_{2}}\dot{f_{3}} = 3\left( \frac{h_{2}}{h_1 + h_{2}}m_1 + \frac{h_1}{h_1 + h_{2}}m_{2} \right) - \frac{h_{2}}{h_1 + h_{2}}f_1',
+\end{align*}
+dan
+\begin{align*}
+\frac{h_{n-1}}{h_{n-2} + h_{n-1}}\dot{f_{n-2}} + 2\dot{f_{n-1}} = 3\left( \frac{h_{n-1}}{h_{n-2} + h_{n-1}}m_{n-2} + \frac{h_{n-2}}{h_{n-2} + h_{n-1}}m_{n-1} \right) - \frac{h_{n-2}}{h_{n-2} + h_{n-1}}f_{n}',
+\end{align*}
+sedemikian hingga diperoleh sistem persamaan
+\begin{gather}\label{3.14}
+    \begin{split}
+    2\dot{f_2} + \mu_1\dot{f_3} &= b_2, \\
+    \lambda_i\dot{f_i} + 2\dot{f_{i+1}} + \mu_i\dot{f_{i+2}} &= b_{i+1}, \: i=2,\dots,n-3, \\
+    \lambda_{n-2}\dot{f_{n-2}} + 2\dot{f_{n-1}} &= b_{n-1},
+    \end{split}
+\end{gather}
+dengan $\lambda_i := \frac{h_{i+1}}{h_i+h_{i+1}}$ dan $ \mu_i := \frac{h_i}{h_i+h_{i+1}}$ sedemikian hingga $ \lambda_i + \mu_i = 1$, untuk setiap $ i=1,~2,\dots,~n-1$, dan
+\begin{align*}
+    b_2 &= 3(\lambda_1m_1 + \mu_1m_2) - \lambda_1f_1',\\
+    b_i &= 3(\lambda_{i-1}m_{i-1} + \mu_{i-1}m_i), \: i=3,\dots,n-2,\\
+    b_{n-1} &= 3(\lambda_{n-2}m_{n-2} + \mu_{n-2}m_{n-1}) - \mu_{n-2}f_n'.
+\end{align*}
+Sistem Persamaan \eqref{3.14} dapat dituliskan sebagai
+\begin{equation}\label{3.15}
+    A\dot{F}=B,
+\end{equation}
+dengan
+\begin{align}\label{3.16}
+\begin{split}
+    A=
+    \begin{bmatrix}
+        2 & \mu_1 \\
+        \lambda_2 & 2 & \mu_2 \\
+        & \lambda_3 & 2 & \mu_3 \\
+        && \ddots & \ddots & \ddots \\
+        &&&\lambda_{n-3} & 2 & \mu_{n-3} \\
+        &&&&\lambda_{n-2} & 2
+    \end{bmatrix},
+    \dot{F}=
+    \begin{bmatrix}
+        \dot{f_2} \\
+        \dot{f_3} \\
+        \dot{f_4} \\
+        \vdots \\
+        \dot{f_{n-2}} \\
+        \dot{f_{n-1}} 
+    \end{bmatrix},\\
+    B=
+    \begin{bmatrix}
+        3(\lambda_1m_1 + \mu_1m_2) - \lambda_1f_1' \\
+        3(\lambda_{2}m_{2} + \mu_{2}m_3) \\
+        3(\lambda_{3}m_{3} + \mu_{3}m_4) \\
+        \vdots \\
+        3(\lambda_{n-3}m_{n-3} + \mu_{n-3}m_{n-2}) \\
+        3(\lambda_{n-2}m_{n-2} + \mu_{n-2}m_{n-1}) - \mu_{n-2}f_n' \\
+    \end{bmatrix}.
+\end{split}
+\end{align}
+
+Hasil penyelesaian dari persamaan \eqref{3.15} merupakan pendekatan nilai turunan pertama dari fungsi $f$ pada $x_1,~x_2,\dots,~x_n$. Pendekatan turunan pertama yang dihasilkan memiliki order akurasi $O(\hat{h}^3)$, untuk menunjukkan hal tersebut dibutuhkan beberapa lema yang akan diberikan lebih lanjut.
+
+\begin{lemma}\label{3.2.1}
+    Misal $m \in \N$, $0 \leq \mu_i, \lambda_i \leq 1$ dengan $\mu_i + \lambda_i = 1$ untuk setiap $i=1,2,\dots,m,$ dan $A \in \R^{m \times m}$ didefinisikan sebagai
+    \begin{equation*}
+        A:=
+        \begin{bmatrix}
+            2 & \mu_1 \\
+            \lambda_2 & 2 & \mu_2 \\
+            & \lambda_3 & 2 & \mu_3 \\
+            && \ddots & \ddots & \ddots \\
+            &&&\lambda_{m-1} & 2 & \mu_{m-1} \\
+            &&&&\lambda_{m} & 2
+        \end{bmatrix},
+    \end{equation*}
+    serta $w \in \R^m$. Jika $z \in \R^m$ merupakan solusi dari $Az = w$, maka
+    $$||z||_\infty \leq ||w||_\infty$$
+\end{lemma}
+\begin{proof}
+    Misal $i_0$ adalah indeks ketika elemen dari vektor $z$ mencapai nilai maksimum dari nilai mutlak setiap elemennya sehingga $|z_{i_0}| = ||z||_\infty=\max(|z_1|,~|z_2|,\dots,|z_m|)$, akibatnya diperoleh
+    \begin{align*}
+        ||w||_\infty &\geq |w_{i_0}| = |\lambda_{i_0+1}z_{i_0-1} + 2z_{i_0} + \mu_{i_0+1}z_{i_0+1}|\\
+        &\geq 2|z_{i_0}| - \lambda_{i_0+1}|z_{i_0-1}| - \mu_{i_0+1}|z_{i_0+1}|\\
+        &\geq 2|z_{i_0}| - (\lambda_{i_0+1} + \mu_{i_0+1})|z_{i_0}|\\
+        &=|z_{i_0}|=||z||_\infty
+    \end{align*}
+\end{proof}
+
+\begin{contoh}
+    Diberikan matriks $A$ dan matriks $w$ sebagai berikut
+    \begin{gather*}
+    A =
+        \begin{bmatrix}
+        2 & 0.5 & 0 & 0 & 0 & 0\\
+        0.5 & 2 & 0.5 & 0 & 0 & 0\\
+        0 & 0.5 & 2 & 0.5 & 0 & 0\\
+        0 & 0 & 0.5 & 2 & 0.5 & 0 \\
+        0 & 0 & 0 & 0.5 & 2 & 0.5\\
+        0 & 0 & 0 & 0 & 0.5 & 2 
+        \end{bmatrix}, w = \begin{bmatrix}
+            2 \\
+            3 \\
+            1 \\
+            -2 \\
+            4 \\
+            2
+        \end{bmatrix}.
+    \end{gather*}
+    Apabila dicari solusi dari persamaan $Az=w$, maka diperoleh vektor $z$ berupa
+    \begin{gather*}
+        z=\begin{bmatrix}
+            0.710\\
+            1.161\\
+            0.646\\
+            -1.744\\
+            2.332\\
+            0.417
+        \end{bmatrix},
+    \end{gather*}
+    yang berakibat $2.332 = ||z||_\infty \leq ||w||_\infty = 4$.
+\end{contoh}
+
+\begin{lemma}\label{3.2.2}
+    Misal $f(x) \in C^4([x_1,x_n])$ dan $L>0$ dengan $|f^4(x)|\leq L, \forall x \in [x_1,x_n]$. Jika terdapat $K>0$ sehingga $\hat{h}/h_j\leq K,$ untuk setiap $ j=1,2,\dots,n-1$ dan
+    \begin{equation}
+        R(i) := 3\lambda_{i-1}m_{i-1} + 3\mu_{i-1}m_i - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}',~1\leq i \leq n-1,
+    \end{equation}
+    dengan $\lambda_i,\:m_i,\:\mu_i,\:1 \leq i \leq n-1$, yang sudah didefinisikan sebelumnya, maka
+    \begin{equation}
+        |R(i)| \leq \left( \frac{17K + K^2}{16} + 1 \right)L\hat{h}^3 = O(\hat{h}^3),~2 \leq i \leq n-1.
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    Misal $2 \leq i \leq n-1$. Berdasarkan Teorema \ref{TeoremaTaylor}, diperoleh
+    \begin{align*}
+        &&f(x) = f_{i-1} + (x-x_{i-1})f_{i-1}' + \frac{(x-x_{i-1})^2}{2}f_{i-1}'' + \frac{(x-x_{i-1})^3}{6}f_{i-1}^{(3)} + \frac{(x-x_{i-1})^4}{24}f^{(4)}(\xi_1),\\
+        &\Rightarrow&f(x) - f_{i-1} = (x-x_{i-1})f_{i-1}' + \frac{(x-x_{i-1})^2}{2}f_{i-1}'' + \frac{(x-x_{i-1})^3}{6}f_{i-1}^{(3)} + \frac{(x-x_{i-1})^4}{24}f^{(4)}(\xi_1),\\
+        &&f'(x) = f_{i-1}' + (x-x_{i-1})f_{i-1}'' + \frac{(x-x_{i-1})^2}{2}f_{i-1}^{(3)} + \frac{(x-x_{i-1})^3}{6}f^{(4)}(\xi_2),
+    \end{align*}
+    untuk suatu $\xi_1,\xi_2 \in [x_1,x_n]$.\\
+    Hal ini menyebabkan adanya $\tau_j^i \in [x_1,x_n],~j=1,\dots,5$ dengan,
+    \begin{align*}
+        m_{i-1}=&\frac{f(x_{i})-f(x_{i-1})}{h_{i-1}}=f_{i-1}' + \frac{h_{i-1}}{2}f_{i-1}'' + \frac{h_{i-1}^2}{6}f_{i-1}^{(3)} + \frac{h_{i-1}^3}{24}f^{(4)}(\tau_1^i),\\
+        m_{i}=&\frac{(f(x_{i+1})-f(x_{i-1}))-(f(x_{i})-f(x_{i-1}))}{h_{i}}\\
+        =&\left( \frac{(h_{i-1}+h_i)}{h_i}f_{i-1}' + \frac{(h_{i-1}+h_i)^2}{2h_i}f_{i-1}'' + \frac{(h_{i-1}+h_i)^3}{6h_i}f_{i-1}^{(3)} + \frac{(h_{i-1}+h_i)^4}{24h_i}f^{(4)}(\tau_2^i) \right)\\
+        &-\left( \frac{(h_{i-1})}{h_i}f_{i-1}' + \frac{(h_{i-1})^2}{2h_i}f_{i-1}'' + \frac{(h_{i-1})^3}{6h_i}f_{i-1}^{(3)} + \frac{(h_{i-1})^4}{24h_i}f^{(4)}(\tau_3^i) \right)\\
+        =&f_{i-1}'+\frac{(2h_{i-1}+h_i)}{2}f_{i-1}''+\frac{(3h_{i-1}^2+3h_{i-1}h_i+h_{i}^2)}{6}f_{i-1}^{(3)}\\
+        &+\frac{(h_{i-1}+h_i)^4}{24h_i}f^{(4)}(\tau_2^i)-\frac{(h_{i-1})^4}{24h_i}f^{(4)}(\tau_3^i),\\
+        f_i' =& f_{i-1}' + h_{i-1}f_{i-1}'' + \frac{h_{i-1}^2}{2}f_{i-1}^{(3)} + \frac{h_{i-1}^3}{6}f^{(4)}(\tau_4^i),
+    \end{align*}
+    dan
+    \begin{align*}
+        f_{i+1}' =& f_{i-1}' + (h_{i-1}+h_i)f_{i-1}'' + \frac{(h_{i-1}+h_i)^2}{2}f_{i-1}^{(3)} + \frac{(h_{i-1}+h_i)^3}{6}f^{(4)}(\tau_5^i),
+    \end{align*}
+    sehingga diperoleh
+    \begin{align*}
+        |R(i)|=&|3\lambda_{i-1}m_{i-1} + 3\mu_{i-1}m_i - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}'|\\
+        =&|\lambda_{i-1}(3m_{i-1}-f_{i-1}')+\mu_{i-1}(3m_i-f_{i+1}')-2f_i'|\\
+        =&\left|\frac{1}{2\left(h_{i-1}+h_{i}\right)}\left[\left(4 h_{i} f_{i-1}^{\prime}+\left(3 h_{i-1} h_{i}\right) f_{i-1}^{\prime \prime}+\left(h_{i-1}^{2} h_{i}\right) f_{i-1}^{(3)}\right)\right.\right.\\
+        &+\left.\left(4 h_{i-1} f_{i-1}^{\prime}+\left(4 h_{i-1}^{2}+h_{i-1} h_{i}\right) f_{i-1}^{\prime \prime}+\left(2 h_{i-1}^{3}+h_{i-1}^{2} h_{i}\right) f_{i-1}^{(3)}\right)\right]\\
+        &-2\left(f_{i-1}^{\prime}+h_{i-1} f_{i-1}^{\prime \prime}+\frac{h_{i-1}^{2}}{2} f_{i-1}^{(3)}\right)+\frac{h_{i-1}^{3} h_{i}}{8\left(h_{i-1}+h_{i}\right)} f^{(4)}\left(\tau_{1}^{i}\right)+\frac{h_{i-1}\left(h_{i-1}+h_{i}\right)^{3}}{8 h_{i}} f^{(4)}\left(\tau_{2}^{i}\right)\\
+        &\left.-\frac{h_{i-1}^{5}}{8 h_{i}\left(h_{i-1}+h_{i}\right)} f^{(4)}\left(\tau_{3}^{i}\right)-\frac{h_{i-1}\left(h_{i-1}+h_{i}\right)^{2}}{6} f^{(4)}\left(\tau_{5}^{i}\right)-\frac{h_{i-1}^{3}}{3} f^{(4)}\left(\tau_{4}^{i}\right)\right|\\
+        \leq&\left(\frac{h_{i-1}^{3} h_{i}}{8\left(h_{i-1}+h_{i}\right)}+\frac{h_{i-1}\left(h_{i-1}+h_{i}\right)^{3}}{8 h_{i}}+\frac{h_{i-1}^{5}}{8 h_{i}\left(h_{i-1}+h_{i}\right)}+\frac{h_{i-1}\left(h_{i-1}+h_{i}\right)^{2}}{6}+\frac{h_{i-1}^{3}}{3}\right) L \\
+        \leq&\left(\frac{K \hat{h}^{3}}{16}+K \hat{h}^{3}+K^{2} \frac{\hat{h}^{3}}{16}+\frac{2 \hat{h}^{3}}{3}+\frac{\hat{h}^{3}}{3}\right) L \\
+        =&\left(\frac{17 K+K^{2}}{16}+1\right)L \hat{h}^{3}=O(\hat{h}^{3}),
+    \end{align*}
+    dengan $L = \sup{f^{(4)}(x): x \in [x_1,x_n]}$.
+\end{proof}
+
+
+Lema \ref{3.2.1} dan Lema \ref{3.2.2} merupakan lema yang dibutuhkan untuk menunjukan order akurasi dari hasil pendekatan turunan pertama yang diperoleh dengan menyelesaikan Persamaan \eqref{3.15}. Order akurasi dari hasil pendekatan tersebut akan dibahas pada teorema selanjutnya.
+
+\begin{teorema}\label{3.3.3}
+    Misalkan $\hat{h}<1$, $f(x)\in C^4([x_1,x_n])$, dan terdapat $L>0$ sedemikian hingga $|f^{(4)}(x)| \leq L$, untuk setiap $x\in[x_1,x_n]$. Jika $F'=[f'(x_1),\dots,f'(x_{n-1})]^T$, $\dot{F}$ adalah solusi dari Persamaan \eqref{3.15} dan terdapat $K>0$, sehingga $\hat{h}/h_i \leq K$ untuk setiap $i=1,~2,\dots,n-1$, maka berlaku
+    \begin{align*}
+        ||\dot{F}-F'||_\infty \leq O(\hat{h}^3).
+    \end{align*}
+\end{teorema}
+\begin{proof}
+    Didefinisikan $r=A(\dot{F}-F')=A\dot{F}-AF'=B-AF'$ sehingga berdasarkan Lema \ref{3.2.2} diperoleh
+    \begin{align*}
+        |r_1|& =\left|b_2-2 f_2^{\prime}-\mu_1 f_3^{\prime}\right|\\
+        &=\left|3 \lambda_1 m_1+3 \mu_1 m_2-\lambda_1 f_1^{\prime}-2 f_2^{\prime}-\mu_1 f_3^{\prime}\right|\\
+        &=|R(2)|
+         \leq\left(\frac{17 K+K^2}{16}+1\right) L \hat{h}^3=O\left(\hat{h}^3\right), \\
+        \left|r_{i-1}\right| 
+        & =\left|b_i-\lambda_{i-1} f_{i-1}^{\prime}-2 f_i^{\prime}-\mu_{i-1} f_{i+1}^{\prime}\right|\\
+        &=\left|3 \lambda_{i-1} m_{i-1}+3 \mu_{i-1} m_i-\lambda_{i-1} f_{i-1}^{\prime}-2 f_i^{\prime}-\mu_{i-1} f_{i+1}^{\prime}\right|\\
+        & =|R(i)| \leq\left(\frac{17 K+K^2}{16}+1\right) L \hat{h}^3=O\left(\hat{h}^3\right), \quad 3 \leq i \leq n-2, \\
+        \left|r_{n-2}\right| & =\left|b_{n-1}-\lambda_{n-2} f_{n-2}^{\prime}-2 f_{n-1}^{\prime}\right|\\
+        &=\left|3\left(\lambda_{n-2} m_{n-2}+\mu_{n-2} m_{n-1}\right)-\mu_{n-2} f_n^{\prime}-\lambda_{n-2} f_{n-2}^{\prime}-2 f_{n-1}^{\prime}\right| \\
+        & =|R(n-1)| \leq\left(\frac{17 K+K^2}{16}+1\right) L \hat{h}^3=O\left(\hat{h}^3\right) .
+    \end{align*}
+    Selanjutnya dikarenakan $(\dot{F}-F')$ merupakan solusi dari $A(\dot{F}-F')=r$, berdasarkan Lema \ref{3.2.1} diperoleh
+    \begin{equation*}
+        ||\dot{F}-F'||_\infty \leq ||r||_\infty \leq O(\hat{h}^3).
+    \end{equation*}
+\end{proof}
+
+Teorema \ref{3.3.3} menjelaskan bahwa order akurasi dari pendekatan turunan yang diperoleh dengan menyelesaikan Persamaan \eqref{3.15} adalah $O(\hat{h}^3)$. Akibat langsung dari teorema tersebut adalah order akurasi dari polinomial interpolasi Hermite kubik yang diperoleh dengan pendekatan $\dot{f}$ dari Persamaan \eqref{3.15} memiliki order akurasi $O(\hat{h}^4)$ berdasarkan Lema \ref{orderAkurasi}.
+
+Order akurasi dari pendekatan turunan pada Teorema \ref{3.3.3} dapat diperkuat dalam kasus di mana $h_i = h_{i+1}$ untuk setiap $i=1,~2,\dots,~n-2$ dan $f \in C^5[x_1,x_n]$ sehingga order akurasi yang diperoleh adalah $O(h^4)$.
+
+\begin{teorema}\label{oa4}
+    Misalkan $\hat{h}<1$, $f(x)\in C^5[x_1,x_n]$, dan terdapat $L>0$ sedemikian hingga $|f^{(5)}(x)| \leq L$, untuk setiap $x\in[x_1,x_n]$. Jika $F'=[f'(x_1),\dots,f'(x_{n-1})]^T$, $\dot{F}$ adalah solusi dari Persamaan \eqref{3.15} dan $h_i = h_{i+1}$ untuk setiap $i=1,~2,\dots,n-2$, maka berlaku
+    \begin{align*}
+        ||\dot{F}-F'||_\infty \leq O(\hat{h}^4).
+    \end{align*}
+\end{teorema}
+
+\begin{proof}
+    Didefinisikan
+    \begin{equation*}
+        R(i) := 3\lambda_{i-1}m_{i-1} + 3\mu_{i-1}m_i - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}',~1\leq i \leq n-1,
+    \end{equation*}
+    dengan $\lambda_i,\:m_i,\:\mu_i,\:0 \leq i \leq n-1$, yang sudah didefinisikan sebelumnya.
+    Misal $1 \leq i \leq n-1$, dengan menggunakan Teorema Taylor diperoleh
+    \begin{align*}
+        &&f(x) =& f_{i-1} + (x-x_{i-1})f_{i-1}' + \frac{(x-x_{i-1})^2}{2}f_{i-1}'' + \frac{(x-x_{i-1})^3}{6}f_{i-1}^{(3)} \\
+        &&&+ \frac{(x-x_{i-1})^4}{24}f^{(4)}_{i-1} + \frac{(x-x_{i-1})^5}{120}f^{(5)}(\xi_1),\\
+        &\Rightarrow&f(x) - f_{i-1} =& (x-x_{i-1})f_{i-1}' + \frac{(x-x_{i-1})^2}{2}f_{i-1}'' + \frac{(x-x_{i-1})^3}{6}f_{i-1}^{(3)} \\
+        &&&+ \frac{(x-x_{i-1})^4}{24}f^{(4)}_{i-1} + \frac{(x-x_{i-1})^5}{120}f^{(5)}(\xi_1)\\
+        &&f'(x) =& f_{i-1}' + (x-x_{i-1})f_{i-1}'' + \frac{(x-x_{i-1})^2}{2}f_{i-1}^{(3)} + \frac{(x-x_{i-1})^3}{6}f^{(4)}_{i-1}\\
+        &&&+ \frac{(x-x_{i-1})^4}{24}f^{(5)}(\xi_2),
+    \end{align*}
+    untuk suatu $\xi_1,\xi_2 \in [x_1,x_n]$.\\
+    Diperhatikan bahwa $h_i = h_{i+1}$ untuk setiap $i=1,~2,\dots,n-1$ sehingga diperoleh
+    \begin{align*}
+        m_{i-1}=&\frac{f(x_{i})-f(x_{i-1})}{\hat{h}}=f_{i-1}' + \frac{\hat{h}}{2}f_{i-1}'' + \frac{\hat{h}^2}{6}f_{i-1}^{(3)} + \frac{\hat{h}^3}{24}f^{(4)}_{i-1} + \frac{\hat{h}^4}{120}f^{(5)}(\tau_1^i),\\
+        m_{i}=&\frac{(f(x_{i+1})-f(x_{i-1}))-(f(x_{i})-f(x_{i-1}))}{\hat{h}}\\
+        =&\left( 2f_{i-1}' + 2\hat{h}f_{i-1}'' + \frac{4\hat{h}^2}{3}f_{i-1}^{(3)} + \frac{2\hat{h}^3}{3}f^{(4)}_{i-1} + \frac{4\hat{h}^4}{15}f^{(5)}(\tau_2^i) \right)\\
+        &-\left( f_{i-1}' + \frac{\hat{h}}{2}f_{i-1}'' + \frac{\hat{h}^2}{6}f_{i-1}^{(3)} + \frac{\hat{h}^3}{24}f^{(4)}_{i-1} + \frac{\hat{h}^4}{120}f^{(5)}(\tau_3^i) \right)\\
+        =&f_{i-1}'+\frac{3\hat{h}}{2}f_{i-1}''+\frac{7\hat{h}^2}{6}f_{i-1}^{(3)}+\frac{15\hat{h}^3}{24}f^{(4)}_{i-1}\\
+        &+ \frac{4\hat{h}^4}{15}f^{(5)}(\tau_2^i) - \frac{\hat{h}^4}{120}f^{(5)}(\tau_3^i),\\
+        f_i' =& f_{i-1}' + \hat{h}f_{i-1}'' + \frac{\hat{h}^2}{2}f_{i-1}^{(3)} + \frac{\hat{h}^3}{6}f^{(4)}_{i-1} + \frac{\hat{h}^4}{24}f^{(5)}(\tau_4^i), \\
+        f_{i+1}' =& f_{i-1}' + 2\hat{h}f_{i-1}'' + 2\hat{h}^2f_{i-1}^{(3)} + \frac{4\hat{h}^3}{3}f^{(4)}_{i-1} + \frac{2\hat{h}^4}{3}f^{(5)}(\tau_5^i),
+    \end{align*}
+    dengan $\tau_j^i \in [x_1,x_n],~j=1,\dots,5$ sehingga diperoleh
+    \begin{align*}
+        |R(i)|=&|3\lambda_{i-1}m_{i-1} + 3\mu_{i-1}m_i - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}'|\\
+        =&|\lambda_{i-1}(3m_{i-1}-f_{i-1}')+\mu_{i-1}(3m_i-f_{i+1}')-2f_i'|\\
+        =&\left|\frac{1}{2}\left[\left(2 f_{i-1}^{\prime}+\frac{3\hat{h}}{2} f_{i-1}^{\prime \prime}+\frac{\hat{h}^2}{2} f_{i-1}^{(3)} + \frac{\hat{h}^3}{8}f_{i-1}^{(4)}\right)\right.\right.\\
+        &+\left.\left(2 f_{i-1}^{\prime}+\frac{5\hat{h}}{2} f_{i-1}^{\prime \prime}+\frac{3\hat{h}^2}{2} f_{i-1}^{(3)} + \frac{13\hat{h^3}}{24}f_{i-1}^{(4)}\right)\right]\\
+        &-2\left(f_{i-1}' + \hat{h}f_{i-1}'' + \frac{\hat{h}^2}{2}f_{i-1}^{(3)} + \frac{\hat{h}^3}{6}f^{(4)}_{i-1}\right)\\
+        &\left.+ \frac{\hat{h}^4}{80}f^{(5)}(\tau_1^i) + \frac{4\hat{h}^4}{10}f^{(5)}(\tau_2^i) - \frac{\hat{h}^4}{80}f^{(5)}(\tau_3^i) - \frac{\hat{h}^4}{3}f^{(5)}(\tau_4^i) - \frac{\hat{h}^4}{12}f^{(5)}(\tau_5^i)\right|\\
+        =&\left| \frac{1}{80}f^{(5)}(\tau_1^i) + \frac{4}{10}f^{(5)}(\tau_2^i) - \frac{1}{80}f^{(5)}(\tau_3^i) - \frac{1}{3}f^{(5)}(\tau_4^i) - \frac{1}{12}f^{(5)}(\tau_5^i)\right| \hat{h}^4 \\
+        \leq& \left( \frac{1}{80}f^{(5)}(\tau_1^i) + \frac{4}{10}f^{(5)}(\tau_2^i) + \frac{1}{80}f^{(5)}(\tau_3^i) + \frac{1}{3}f^{(5)}(\tau_4^i) + \frac{1}{12}f^{(5)}(\tau_5^i)\right)\hat{h}^{4}=O(\hat{h}^{4}).
+    \end{align*}
+
+    Selanjutnya didefinisikan $r=A(\dot{F}-F')=A\dot{F}-AF'=B-AF'$ sehingga $r = [R(2) ~ R(3) ~ \dots ~ R(n-1)]$ dan $||r||_\infty \leq O(\hat{h}^4)$. Diperhatikan bahwa 
+    $$||r||_\infty = ||A(\dot{F}-F')||_\infty,$$ 
+    sehingga berdasarkan Lema \ref{3.2.1} diperoleh $$||\dot{F}-F'||_\infty \leq ||r||_\infty \leq O(\hat{h}^4).$$
+\end{proof}
+
+Secara umum kemonotonan polinomial interpolasi tidak selalu bisa terpenuhi. Karena hal tersebut selanjutnya dibentuk teorema yang membahas tentang syarat kemonotonan sehingga polinomial interpolasi spline kubik yang dihasilkan memiliki sifat monoton.
+
+\begin{teorema}\label{syarat_monoton_3.3.4}
+    Jika syarat perlu monoton pada Teorema \ref{perluMonoton} terpenuhi dan
+    \begin{equation*}
+        |\dot{f_i}|=|\sum_{j=1}^{n-2}A_{i-1,j}^{-1}b_{j+1}|\leq3\min(|m_{i-1}|,|m_i|),
+    \end{equation*}
+    untuk setiap $i=1,~2,\dots,n-1$, maka polinomial Hermite kubik yang dihasilkan pada Persamaan  \eqref{P_i} monoton pada setiap interval $[x_i,x_{i+1}]$.
+\end{teorema}
+
+\begin{proof}
+     Diperhatikan bahwa untuk setiap $i=1,~2,\dots,n-1$ syarat perlu monoton pada Teorema \ref{perluMonoton} terpenuhi dan $$|\dot{f_i}|\leq3\min(|m_{i-1}|,|m_i|),$$ sedemikian hingga berdasarkan Teorema \ref{3.1.7} diperoleh polinomial Hermite kubik yang dihasilkan pada Persamaan \eqref{P_i} monoton pada setiap interval $[x_i,x_{i+1}]$.
+\end{proof}
+
+Secara umum syarat kemonotonan pada Teorema \ref{syarat_monoton_3.3.4} tidak selalu terpenuhi. Jika hasil pendekatan turunan pada titik yang diinterpolasi tidak memenuhi syarat agar Persamaan \eqref{P_i} monoton, maka dikonstruksikan dua metode yang mungkin dengan mempertahankan regularitas maksimum persamaannya atau dengan mempertahankan akurasi maksimum persamaannya.
+
+\section{Interpolasi Spline Kubik Monoton dengan Regularitas Maksimum}\label{4.2}
+
+Untuk membentuk metode interpolasi spline kubik  yang memiliki regularitas $C^2$ pada interval $[x_0,x_n]$ kecuali pada titik di mana nilai pendekatan turunan pertamanya tidak memenuhi syarat monoton. Pada titik yang tidak memenuhi syarat monoton nilai pendekatan pertamanya akan dicari dengan menggunakan metode yang berbeda, sedangkan nilai pendekatan turunan pertama pada titik-titik lainnya akan dicari dengan metode sebelumnya yaitu dengan memanfaatkan Persamaan \eqref{3.15} yang diubah agar tidak mengandung titik-titik di mana syarat kemonotonan tidak terpenuhi.
+
+Langkah pertama yang dilakukan adalah mengubah Persamaan \eqref{3.15} dengan menghilangkan titik-titik di mana nilai pendekatan turunan pertamanya tidak memenuhi syarat monoton pada Teorema \ref{syarat_monoton_3.3.4}.
+
+Misalkan $i_0$ merupakan indeks di mana pendekatan turunan pertamanya sehingga $f_{i_0}$ tidak memenuhi syarat monoton pada Teorema \ref{syarat_monoton_3.3.4} dengan $0 < i_0 < n$. Didefinisikan matriks $A_{i_0^-} \in \R^{(i_0 - 2)\times(i_o - 2)}$ dan $A_{i_0^+} \in \R^{(n-i_0-1)\times(n-i_0-1)}$ dengan
+\begin{align}\label{splReg1}
+    A_{i_0^-}=
+    \begin{bmatrix}
+        2 & \mu_1 & & & &\\
+        \lambda_2 & 2 & \mu_2 & & &\\
+        0 & \lambda_3 & 2 & \mu_3 & &\\
+        & & \ddots & \ddots & \ddots &\\
+        & & & \lambda_{i_0 - 3} & 2 & \mu_{i_0 - 3}\\
+        & & & & \lambda_{i_0-2} & 2
+    \end{bmatrix},\notag \\
+    A_{i_0^+}=
+    \begin{bmatrix}
+        2 & \mu_{i_0} & & & &\\
+        \lambda_{i_0+1} & 2 & \mu_{i_0+1} & & &\\
+        0 & \lambda_{i_0+2} & 2 & \mu_{i_0+2} & &\\
+        & & \ddots & \ddots & \ddots &\\
+        & & & \lambda_{n - 3} & 2 & \mu_{n - 3}\\
+        & & & & \lambda_{n-2} & 2
+    \end{bmatrix},
+\end{align}
+dan vektor
+\begin{align}\label{splReg2}
+    \dot{F}_{i_0^-}=
+    \begin{bmatrix}
+        \dot{f}_2\\
+        \dot{f}_3\\
+        \dot{f}_4\\
+        \vdots\\
+        \dot{f}_{i_0-3}\\
+        \dot{f}_{i_0-2}\\
+        \dot{f}_{i_0-1}
+    \end{bmatrix},
+    B_{i_0^-}=
+    \begin{bmatrix}
+        b_2\\
+        b_3\\
+        b_4\\
+        \vdots\\
+        b_{i_0-3}\\
+        b_{i_0-2}\\
+        b_{i_0-1}
+    \end{bmatrix},
+    \dot{F}_{i_0^+}=
+    \begin{bmatrix}
+        \dot{f}_{i_0+1}\\
+        \dot{f}_{i_0+2}\\
+        \dot{f}_{i_0+3}\\
+        \vdots\\
+        \dot{f}_{n-3}\\
+        \dot{f}_{n-2}\\
+        \dot{f}_{n-1}
+    \end{bmatrix},
+    B_{i_0^+}=
+    \begin{bmatrix}
+        b_{i_0+1}\\
+        b_{i_0+2}\\
+        b_{i_0+3}\\
+        \vdots\\
+        b_{n-3}\\
+        b_{n-2}\\
+        b_{n-1}
+    \end{bmatrix},
+\end{align}
+dengan
+\begin{align}\label{splReg3}
+\begin{split}
+    b_2 &= 3(\lambda_1m_1 + \mu_1m_2) - \lambda_1f_1',\\
+    b_{n-1} &= 3(\lambda_{n-2}m_{n-2} + \mu_{n-2}m_{n-1}) - \mu_{n-2}f_n',\\
+    b_{i_0-1} &= 3(\lambda_{i_0-2}m_{i_0-2} + \mu_{i_0-2}m_{i_0-1}) - \mu_{i_0-2}\Tilde{f}_{i_0},\\
+    b_{i_0+1} &= 3(\lambda_{i_0}m_{i_0} + \mu_{i_0}m_{i_0+1}) - \lambda_{i_0}\Tilde{f}_{i_0},\\
+    b_i &= 3(\lambda_{i-1}m_{i-1} + \mu_{i-1}m_i), \: i=2,3,\dots,i_0-2,i_0+2,\dots,n-2,
+\end{split}
+\end{align}
+Sistem Persamaan \eqref{3.14} diubah dengan menghilangkan persamaan saat $i=i_0$ dan mengganti nilai pendekatan untuk $\dot{f}_{i_0}=\Tilde{f}_{i_0}$ untuk persamaan dengan indeks \mbox{$i=i_0-1,i_0+1$} dengan $\Tilde{f}_{i_0}$ pendekatan turunan secara nonlinear yang akan dibahas pada subbab selanjutnya. Dengan mengubah Sistem Persamaan \eqref{3.14} diperoleh sistem persamaan yang baru 
+\begin{equation} \label{SKMregularity}
+A_{i_0}\dot{F}_{i_0}=B_{i_0},
+\end{equation}
+dengan
+\begin{equation}\label{system_i0}
+    A_{i_0}=
+    \begin{bmatrix}
+        A_{i_0^-} & \\
+        & A_{i_0^+}
+    \end{bmatrix},
+    \dot{F}_{i_0}=
+    \begin{bmatrix}
+        \dot{F}_{i_0^-}\\
+        \dot{F}_{i_0^+}
+    \end{bmatrix}
+    B_{i_0}=
+    \begin{bmatrix}
+        B_{i_0}^-\\
+        B_{i_0^+}
+    \end{bmatrix}.
+\end{equation}
+
+Setelah didefinisikan sistem persamaan baru untuk menghitung interpolasi spline kubik monoton dengan mengubah Sistem Persamaan \eqref{3.14}, selanjutnya akan diberikan lema yang akan digunakan untuk memperoleh order akurasi dari spline kubik monoton dengan menggunakan Persamaan \eqref{SKMregularity}.
+
+\begin{lemma}\label{3.4.1}
+    Misal $n\in \N$ dan $A \in \R^{n\times n}$ yang didefinisikan sebagai
+    \begin{equation*}
+        A:=
+        \begin{bmatrix}
+            \lambda_1 & (1-\alpha_1) \\
+             \alpha_2 & \lambda_2 & (1-\alpha_2) \\
+            & \alpha_3 & \lambda_3 & (1-\alpha_3) \\
+            && \ddots & \ddots & \ddots \\
+            &&& \alpha_{n-1} & \lambda_{n-1} & (1-\alpha_{n-1}) \\
+            &&&& \alpha_{n} & \lambda_{n}
+        \end{bmatrix},
+    \end{equation*}
+    dengan $0<\alpha_i<1$, $i=1,~2,\dots,~n$ dan $\lambda_i \lambda_{i+1}>1$, $i=1,~2,\dots,~n-1$.
+    Jika element dari matriks $A^{-1}$ dinotasikan
+    \begin{equation*}
+        x_{ij}, \quad i,j=1,~2,\dots,~n, 
+    \end{equation*}
+    maka berlaku pertidaksamaan berikut
+    \begin{align*}
+        1 &< x_{ii}\lambda_i < \frac{\mu_{i}}{\mu_i - 1}, \quad i=1,~2,\dots,~n,\\
+        0 &<(-1)^{i-j}x_{ij} \prod_{t=t_1}^{t_2}{\lambda_t}<\frac{\mu_{j}}{\mu_j - 1}, \quad i,j=1,~2,\dots,~n, \quad i \neq j,
+    \end{align*}
+    dengan $t_1=\min(i,j)$, $t_2=\max(i,j)$,
+    \begin{align*}
+        \mu_1&=\lambda_1 \lambda_2,\\
+        \mu_i&=\min(\lambda_{i-1} \lambda_i, \lambda_i \lambda_{i+1}), \quad i=2,~3,\dots,~n-1,\\
+        \mu_n&=\lambda_{n-1}\lambda_n.
+    \end{align*}
+\end{lemma}
+
+\begin{proof}
+    Diperhatikan bahwa $AA^{-1}=I$ sehingga diperoleh dengan meninjau kolom pertama pada $A^{-1}$ diperoleh sistem persamaan
+    \begin{align}
+        \lambda_1x_{1n} + (1 - \alpha_1)x_{2n} &= 0 \label{3.20}\\
+        \alpha_ix_{(i-1)n} + \lambda_ix_{in} + (1 - \alpha_i)x_{(i+1)n} &= 0, \quad i=2,~3,\dots,~n-1 \label{3.21}\\
+        \alpha_nx_{(n-1)n} + \lambda_nx_{nn} &= 1.\label{3.22}
+    \end{align}
+    Diandaikan $x_{2n}=0$, dari Persamaan \eqref{3.20} diperoleh bahwa $x_{1n}=0$. Selanjutnya secara rekursif pada Persamaan \eqref{3.21} dengan $x_{1n}=x_{2n}=0$ berakibat
+    \begin{equation*}
+        x_{in}=0, \quad i=1,~2,\dots,~n.
+    \end{equation*}
+    Terjadi kontradiksi pada Persamaan \eqref{3.22} karena diperoleh $\alpha_nx_{(n-1)n} + \lambda_nx_{nn} = 0$ sehingga dapat disimpulkan bahwa $x_{2n} \neq 0$.
+
+    Dikarenakan $x_{2n} \neq 0$ maka Persamaan \eqref{3.20} dapat dituliskan sebagai
+    \begin{equation*}
+        -\lambda_1\frac{x_{1n}}{x_{2n}} = (1 - \alpha_1),
+    \end{equation*}
+    yang berakibat
+    \begin{equation*}
+        0 < -\lambda_1\frac{x_{1n}}{x_{2n}} < 1.
+    \end{equation*}
+    Selanjutnya akan ditunjukkan secara induksi
+    \begin{equation}
+        0 < -\lambda_i\frac{x_{in}}{x_{(i+1)n}} < 1, \quad i=1,~2,\dots,~n-1. \label{3.23}
+    \end{equation}
+    Diasumsikan Pertidaksamaan \eqref{3.23} berlaku untuk $i=k-1$, sehingga dapat dituliskan
+    \begin{equation*}
+        0 < -\lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}} < 1,
+    \end{equation*}
+    dengan $x_{kn} \neq 0$. Lalu dikarenakan $x_{kn} \neq 0$ dan $0<\alpha_k<1$ maka dari Persamaan \eqref{3.21} diperoleh
+    \begin{align*}
+         &&\alpha_kx_{(k-1)n} + \lambda_kx_{kn} +& (1 - \alpha_k)x_{(k+1)n} = 0, \\
+         &\Longrightarrow&-\lambda_{k-1}\lambda_{k}=\alpha_k\lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}} +& (1 - \alpha_k)\lambda_{k-1}\frac{x_{(k+1)n}}{x_{kn}}, \\
+         &\Longrightarrow&\min(\lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}},\lambda_{k-1}\frac{x_{(k+1)n}}{x_{kn}}) \leq & -\lambda_{k-1}\lambda_{k} \leq \max(\lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}},\lambda_{k-1}\frac{x_{(k+1)n}}{x_{kn}}).
+    \end{align*}
+    Diperhatikan bahwa $-\lambda_{k-1}\lambda_{k} < -1$ dan $\lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}} > -1$ sehingga diperoleh 
+    \begin{equation*}
+        \lambda_{k-1}\frac{x_{(k+1)n}}{x_{kn}} < \lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}},
+    \end{equation*}
+    berakibat
+    \begin{equation}\label{3.24}
+        \lambda_{k-1}\frac{x_{(k+1)n}}{x_{kn}} < -\lambda_{k-1}\lambda_{k} < \lambda_{k-1}\frac{x_{(k-1)n}}{x_{kn}}.
+    \end{equation}
+    Lalu dikarenakan $-\lambda_{k-1}\lambda_{k} < -1 < 0$, berakibat $\lambda_{k-1} \neq 0$ dan $\lambda_{k} \neq 0$ sedemikian hingga dari Pertidaksamaan \eqref{3.24} diperoleh
+    \begin{equation*}
+        \lambda_{k-1}\frac{x_{(k+1)n}}{x_{kn}} < -\lambda_{k-1}\lambda_{k} < 0,
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+        0 < -\lambda_{k}\frac{x_{kn}}{x_{(k+1)n}} < 1.
+    \end{equation*}
+    Berdasarkan induksi tersebut dapat disimpulkan bahwa Pertidaksamaan \eqref{3.23} berlaku. Persamaan \eqref{3.22} dapat dituliskan sebagai
+    \begin{equation*}
+        -\alpha_n \lambda_{n-1} \frac{x_{(n-1)n}}{x_{nn}} = \lambda_{n-1}\lambda_{n} - \frac{\lambda_{n-1}}{x_{nn}},
+    \end{equation*}
+    diperhatikan bahwa dari Pertidaksamaan \eqref{3.23}
+    \begin{equation*}
+        0 <  -\alpha_n \lambda_{n-1} \frac{x_{(n-1)n}}{x_{nn}} < \alpha_n < 1
+    \end{equation*}
+    sehingga diperoleh
+    \begin{equation}\label{3.25}
+        0 <  \lambda_{n-1}\lambda_{n} - \frac{\lambda_{n-1}}{x_{nn}} < 1.
+    \end{equation}
+    Diperhatikan bahwa $\lambda_{n-1}\lambda_{n} > 1$ sehingga Persamaan \eqref{3.25} dapat ditulis dengan mengganti $\lambda_{n-1}\lambda_{n}=\mu_n$ sebagai
+    \begin{align}
+        &&0 <  \lambda_{n-1}\lambda_{n} - \frac{\lambda_{n-1}}{x_{nn}} < 1, \notag \\
+        &\Longrightarrow&0 >  -\lambda_{n-1}\lambda_{n} + \frac{\lambda_{n-1}}{x_{nn}} > -1,\notag \\
+        &\Longrightarrow&\lambda_{n-1}\lambda_{n} > \frac{\lambda_{n-1}}{x_{nn}} > \lambda_{n-1}\lambda_{n} - 1,\notag \\
+        &\Longrightarrow& \frac{1}{\lambda_{n-1}\lambda_{n}} < \frac{x_{nn}}{\lambda_{n-1}} < \frac{1}{\lambda_{n-1}\lambda_{n} - 1},\notag \\
+        &\Longrightarrow&1 < \lambda_{n}x_{nn} < \frac{\lambda_{n-1}\lambda_{n}}{\lambda_{n-1}\lambda_{n} - 1}, \notag \\
+        &\Longrightarrow& 1 < \lambda_{n}x_{nn} <  \frac{\mu_n}{\mu_n - 1}. \label{3.26}
+    \end{align}
+    Selanjutnya, dengan memperhatikan Pertidaksamaan \eqref{3.23} dan Pertidaksamaan \eqref{3.26} akan ditunjukkan secara induksi bahwa berlaku
+    \begin{equation}\label{3.27}
+        0 < (-1)^{n-i}x_{in}\lambda_i\lambda_{i+1}\dots\lambda_n < \frac{\mu_n}{\mu_n - 1}, \quad i=n-1,~n-2,\dots,~1.
+    \end{equation}
+    Sebelumnya akan ditinjau terlebih dahulu kasus ketika $i=n-1$. Diperhatikan dari Pertidaksamaan \eqref{3.23} dan \eqref{3.26} diperoleh
+    \begin{equation*}
+        0 < -\lambda_{n-1}\frac{x_{(n-1)n}}{x_{nn}} < 1,
+    \end{equation*}
+    dan
+    \begin{equation*}
+        1 < \lambda_{n}x_{nn} <  \frac{\mu_n}{\mu_n - 1},
+    \end{equation*}
+    berakibat diperoleh
+    \begin{equation*}
+        0 < -x_{(n-1)n}\lambda_{n-1}\lambda_n = (-1)^{n-(n-1)}x_{(n-1)n}\lambda_{n-1}\lambda_n < \frac{\mu_n}{\mu_n - 1},
+    \end{equation*}
+    sehingga Pertidaksamaan \eqref{3.27} berlaku untuk $i=n-1$.
+
+    Diasumsikan Pertidaksamaan \eqref{3.27} berlaku untuk $i=k$. Akan ditunjukkan bahwa pertidaksamaannya juga berlaku untuk $i=k-1$. Karena pertidaksamaannya benar untuk $i=k$ maka diperoleh
+    \begin{equation*}
+        0 < (-1)^{n-k}x_{kn}\lambda_k\lambda_{k+1}\dots\lambda_n < \frac{\mu_n}{\mu_n - 1},
+    \end{equation*}
+    diperhatikan dari Pertidaksamaan \eqref{3.23} ketika $i=k-1$ dapat dituliskan sebagai
+    \begin{equation*}
+        0 < - \lambda_{k-1} \frac{x_{(k-1)n}}{x_{kn}} < 1,
+    \end{equation*}
+    sehingga didapat
+    \begin{equation*}
+        0 < (-1)^{n-(k-1)} \frac{x_{(k-1)n}\lambda_{k-1}\lambda_k \dots \lambda_n }{(-1)^{n-k} x_{kn} \lambda_k \dots \lambda_n } < 1,
+    \end{equation*}
+    yang berakibat
+    \begin{equation*}
+        0 < (-1)^{n-(k-1)} x_{(k-1)n}\lambda_{k-1}\lambda_k \dots \lambda_n  < (-1)^{n-k} x_{kn} \lambda_k \dots \lambda_n  < \frac{\mu_n}{\mu_n - 1},
+    \end{equation*}
+    hal ini menyebabkan Pertidaksamaan \eqref{3.27} berlaku ketika $i=k-1$ sehingga dapat disimpulkan secara induksi Pertidaksamaan \eqref{3.27} berlaku.
+
+    Berikutnya dengan cara yang sama akan ditinjau kolom pertama dari $A^{-1}$ pada $AA^{-1}=I$ sehingga diperoleh sistem persamaan
+    \begin{align}
+        \lambda_1x_{11} + (1 - \alpha_1)x_{21} &= 1 \label{3.28}\\
+        \alpha_ix_{(i-1)1} + \lambda_ix_{i1} + (1 - \alpha_i)x_{(i+1)1} &= 0, \quad i=2,~3,\dots,~n-1 \label{3.29}\\
+        \alpha_nx_{(n-1)1} + \lambda_nx_{n1} &= 0.\label{3.30}
+    \end{align}
+    Diandaikan $x_{(n-1)1}=0$, dari Persamaan \eqref{3.20} diperoleh bahwa $x_{n1}=0$. Selanjutnya secara rekursif pada Persamaan \eqref{3.29} dengan $x_{n1}=x_{(n-1)1}=0$ berakibat
+    \begin{equation*}
+        x_{i1}=0, \quad i=1,~2,\dots,~n.
+    \end{equation*}
+    Terjadi kontradiksi pada Persamaan \eqref{3.28} karena diperoleh $\lambda_1x_{11} + (1 - \alpha_1)x_{21} = 0$ sehingga dapat disimpulkan bahwa $x_{(n-1)1} \neq 0$.
+
+    Dikarenakan $x_{(n-1)1} \neq 0$ maka Persamaan \eqref{3.30} dapat dituliskan sebagai
+    \begin{equation*}
+        -\lambda_n\frac{x_{n1}}{x_{(n-1)1}} = \alpha_n,
+    \end{equation*}
+    yang berakibat
+    \begin{equation*}
+        0 < -\lambda_n\frac{x_{n1}}{x_{(n-1)1}} < 1.
+    \end{equation*}
+    Selanjutnya akan ditunjukkan secara induksi
+    \begin{equation}
+        0 < -\lambda_i\frac{x_{i1}}{x_{(i-1)1}} < 1, \quad i=n,~n-1,\dots,~2. \label{3.31}
+    \end{equation}
+    Diasumsikan Pertidaksamaan \eqref{3.31} berlaku untuk $i=k+1$, sehingga dapat dituliskan
+    \begin{equation*}
+        0 < -\lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}} < 1,
+    \end{equation*}
+    dengan $x_{k1} \neq 0$. Lalu dikarenakan $x_{k1} \neq 0$ dan $0<\alpha_k<1$ maka dari Persamaan \eqref{3.29} diperoleh
+    \begin{align*}
+         &&\alpha_kx_{(k-1)1} + \lambda_kx_{k1} +& (1 - \alpha_k)x_{(k+1)1} = 0, \\
+         &\Longrightarrow&-\lambda_{k+1}\lambda_{k}=\alpha_k\lambda_{k+1}\frac{x_{(k-1)1}}{x_{k1}} +& (1 - \alpha_k)\lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}}, \\
+         &\Longrightarrow&\min(\lambda_{k+1}\frac{x_{(k-1)1}}{x_{k1}},\lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}}) \leq & -\lambda_{k+1}\lambda_{k} \leq \max(\lambda_{k+1}\frac{x_{(k-1)1}}{x_{k1}},\lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}}).
+    \end{align*}
+    Diperhatikan bahwa $-\lambda_{k+1}\lambda_{k} < -1$ dan $\lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}} > -1$ sehingga diperoleh 
+    \begin{equation*}
+        \lambda_{k+1}\frac{x_{(k-1)1}}{x_{k1}} < \lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}},
+    \end{equation*}
+    berakibat
+    \begin{equation}\label{3.32}
+        \lambda_{k+1}\frac{x_{(k-1)1}}{x_{k1}} < -\lambda_{k+1}\lambda_{k} < \lambda_{k+1}\frac{x_{(k+1)1}}{x_{k1}}.
+    \end{equation}
+    Lalu dikarenakan $-\lambda_{k+1}\lambda_{k} < -1 < 0$, berakibat $\lambda_{k+1} \neq 0$ dan $\lambda_{k} \neq 0$ sedemikian hingga dari Pertidaksamaan \eqref{3.32} diperoleh
+    \begin{equation*}
+        \lambda_{k+1}\frac{x_{(k-1)1}}{x_{k1}} < -\lambda_{k+1}\lambda_{k} < 0,
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+        0 < -\lambda_{k}\frac{x_{k1}}{x_{(k-1)1}} < 1.
+    \end{equation*}
+    Berdasarkan induksi tersebut dapat disimpulkan bahwa Pertidaksamaan \eqref{3.31} berlaku. Persamaan \eqref{3.28} dapat dituliskan sebagai
+    \begin{equation*}
+        -(1 - \alpha_1) \lambda_{2} \frac{x_{(2)1}}{x_{11}} = \lambda_{2}\lambda_{1} - \frac{\lambda_{2}}{x_{11}},
+    \end{equation*}
+    diperhatikan bahwa dari Pertidaksamaan \eqref{3.31}
+    \begin{equation*}
+        0 < -(1 - \alpha_1) \lambda_{2} \frac{x_{(2)1}}{x_{11}} < (1 - \alpha_1) < 1
+    \end{equation*}
+    sehingga diperoleh
+    \begin{equation}\label{3.33}
+        0 <  \lambda_{2}\lambda_{1} - \frac{\lambda_{2}}{x_{11}} < 1.
+    \end{equation}
+    Diperhatikan bahwa $\lambda_{2}\lambda_{1} > 1$ sehingga Persamaan \eqref{3.33} dapat ditulis dengan mensubtitusika $\lambda_{2}\lambda_{1}=\mu_1$ sebagai
+    \begin{align}
+        &&0 <  \lambda_{2}\lambda_{1} - \frac{\lambda_{2}}{x_{11}} < 1, \notag \\
+        &\Longrightarrow&0 >  -\lambda_{2}\lambda_{1} + \frac{\lambda_{2}}{x_{11}} > -1,\notag \\
+        &\Longrightarrow&\lambda_{2}\lambda_{1} > \frac{\lambda_{2}}{x_{11}} > \lambda_{2}\lambda_{1} - 1,\notag \\
+        &\Longrightarrow& \frac{1}{\lambda_{2}\lambda_{1}} < \frac{x_{11}}{\lambda_{2}} < \frac{1}{\lambda_{2}\lambda_{1} - 1},\notag \\
+        &\Longrightarrow&1 < \lambda_{1}x_{11} < \frac{\lambda_{2}\lambda_{1}}{\lambda_{2}\lambda_{1} - 1}, \notag \\
+        &\Longrightarrow& 1 < \lambda_{1}x_{1} <  \frac{\mu_1}{\mu_1 - 1}. \label{3.34}
+    \end{align}
+    
+    Selanjutnya, dengan memperhatikan Pertidaksamaan \eqref{3.31} dan Pertidaksamaan \eqref{3.34} akan ditunjukkan secara induksi bahwa berlaku
+    \begin{equation}\label{3.35}
+        0 < (-1)^{i-1}x_{i1}\lambda_i\lambda_{i-1}\dots\lambda_2\lambda_1 < \frac{\mu_1}{\mu_1 - 1}, \quad i=2,~3,\dots,~n.
+    \end{equation}
+    Sebelumnya akan ditinjau terlebih dahulu kasus ketika $i=2$. Diperhatikan dari Pertidaksamaan \eqref{3.31} dan \eqref{3.34} diperoleh
+    \begin{equation*}
+        0 < -\lambda_{2}\frac{x_{(2)1}}{x_{11}} < 1,
+    \end{equation*}
+    dan
+    \begin{equation*}
+        1 < \lambda_{1}x_{11} <  \frac{\mu_1}{\mu_1 - 1},
+    \end{equation*}
+    berakibat diperoleh
+    \begin{equation*}
+        0 < -x_{(2)1}\lambda_{2}\lambda_1 = (-1)^{2-1}x_{21}\lambda_{2}\lambda_1 < \frac{\mu_1}{\mu_1 - 1},
+    \end{equation*}
+    sehingga Pertidaksamaan \eqref{3.35} berlaku untuk $i=2$.
+
+    Diasumsikan Pertidaksamaan \eqref{3.35} berlaku untuk $i=k$. Akan ditunjukkan bahwa pertidaksamaannya juga berlaku untuk $i=k+1$. Karena pertidaksamaannya berlaku untuk $i=k$ maka diperoleh
+    \begin{equation*}
+        0 < (-1)^{k-1}x_{k1}\lambda_k\lambda_{k-1}\dots\lambda_1 < \frac{\mu_1}{\mu_1 - 1},
+    \end{equation*}
+    diperhatikan dari Pertidaksamaan \eqref{3.31} ketika $i=k+1$ dapat dituliskan sebagai
+    \begin{equation*}
+        0 < - \lambda_{k+1} \frac{x_{(k+1)1}}{x_{k1}} < 1,
+    \end{equation*}
+    sehingga didapat
+    \begin{equation*}
+        0 < (-1)^{(k+1)-1} \frac{x_{(k+1)1}\lambda_{k+1}\lambda_k \dots \lambda_1 }{(-1)^{k-1} x_{k1} \lambda_k \dots \lambda_1 } < 1,
+    \end{equation*}
+    yang berakibat
+    \begin{equation*}
+        0 < (-1)^{(k+1)-1} x_{(k+1)1}\lambda_{k+1}\lambda_k \dots \lambda_1  < (-1)^{k-1} x_{k1} \lambda_k \dots \lambda_1  < \frac{\mu_1}{\mu_1 - 1},
+    \end{equation*}
+    hal ini menyebabkan Pertidaksamaan \eqref{3.35} berlaku ketika $i=k+1$ sehingga dapat disimpulkan secara induksi Pertidaksamaan \eqref{3.35} berlaku.
+
+    Setelah sebelumnya ditinjau kolom pertama dan kolom terakhir dari $A^{-1}$ pada $AA^{-1}=I$, berikutnya akan ditinjau kolom ke-$j$ untuk $j=2,~3,\dots,~n-1$ sehingga diperoleh sistem persamaan
+    \begin{align}
+    \begin{split}
+        \lambda_1x_{1j} + (1 - \alpha_1)x_{2j} &= 0\\
+        \alpha_ix_{(i-1)j} + \lambda_ix_{ij} + (1 - \alpha_i)x_{(i+1)j} &= \delta_{ij}, \quad i=2,~3,\dots,~n-1 \label{3.36}\\
+        \alpha_nx_{(n-1)j} + \lambda_nx_{nj} &= 0,
+    \end{split}
+    \end{align}
+    dengan $\delta_{ij} = 1$ ketika $i=j$ dan $\delta_{ij} = 0$ ketika $i \neq j$. Agar dapat menggunakan pertidaksamaan yang sudah didefinisikan sebelumnya saat meninjau kolom pertama dan kolom terakhir dari $A^{-1}$ perlu ditunjukkan terlebih dahulu bahwa $x_{2j} \neq 0$ dan $x_{(n-1)j} \neq 0$.
+    
+    Diandaikan $x_{(n-1)j} = 0$ sehingga dengan menggunakan $n-j+1$ persamaan terakhir dari Sistem Persamaan \eqref{3.36} diperoleh
+    \begin{align}\label{3.37}
+    \begin{split}
+        x_{nj} = x_{(n-1)j} = \dots = x_{(j+1)j} = x_{jj} = 0,\\
+        \alpha_jx_{(j-1)j} = 1.
+    \end{split}
+    \end{align}
+    Jika $x_{2j} = 0$, maka dengan menggunakan $j$ persamaan pertama dari Sistem Persamaan \eqref{3.36} diperoleh
+    \begin{align}\label{x2eq0}
+    \begin{split}
+        x_{1j} = x_{2j} = \dots = x_{(j-1)j} = x_{jj} = 0,\\
+        (1 - \alpha_j)x_{(j+1)j} = 1,
+    \end{split}
+    \end{align}
+    sehingga terjadi kontaradiksi dengan Persamaan \eqref{3.37}. Selain itu jika $x_{2j} \neq 0$, maka persamaan pertama pada Sistem Persamaan \eqref{3.36} dapat dituliskan sebagai
+    \begin{equation*}
+        -\lambda_1\frac{x_{1j}}{x_{2j}} = (1 - \alpha_1),
+    \end{equation*}
+    yang berakibat
+    \begin{equation*}
+        0 < -\lambda_1\frac{x_{1j}}{x_{2j}} < 1.
+    \end{equation*}
+    Selanjutnya dengan cara yang sama untuk membuktikan Pertidaksamaan \eqref{3.23} dapat ditunjukkan secara induksi
+    \begin{equation}
+        0 < -\lambda_i\frac{x_{ij}}{x_{(i+1)j}} < 1, \quad i=1,~2,\dots,~j-1. \label{3.38}
+    \end{equation}
+    Diasumsikan Pertidaksamaan \eqref{3.38} berlaku untuk $i=k-1$, sehingga dapat dituliskan
+    \begin{equation*}
+        0 < -\lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}} < 1,
+    \end{equation*}
+    dengan $x_{kj} \neq 0$. Jika $x_{kj} \neq 0$ dan $0<\alpha_k<1$, maka dari Sistem Persamaan \eqref{3.36} diperoleh
+    \begin{align*}
+         &&\alpha_kx_{(k-1)j} + \lambda_kx_{kj} +& (1 - \alpha_k)x_{(k+1)j} = 0, \\
+         &\Longrightarrow&-\lambda_{k-1}\lambda_{k}=\alpha_k\lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}} +& (1 - \alpha_k)\lambda_{k-1}\frac{x_{(k+1)j}}{x_{kj}}, \\
+         &\Longrightarrow&\min(\lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}},\lambda_{k-1}\frac{x_{(k+1)j}}{x_{kj}}) \leq & -\lambda_{k-1}\lambda_{k} \leq \max(\lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}},\lambda_{k-1}\frac{x_{(k+1)j}}{x_{kj}}).
+    \end{align*}
+    Diperhatikan bahwa $-\lambda_{k-1}\lambda_{k} < -1$ dan $\lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}} > -1$ sehingga diperoleh 
+    \begin{equation*}
+        \lambda_{k-1}\frac{x_{(k+1)j}}{x_{kj}} < \lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}},
+    \end{equation*}
+    berakibat
+    \begin{equation}\label{3.39}
+        \lambda_{k-1}\frac{x_{(k+1)j}}{x_{kj}} < -\lambda_{k-1}\lambda_{k} < \lambda_{k-1}\frac{x_{(k-1)j}}{x_{kj}}.
+    \end{equation}
+    Lalu dikarenakan $-\lambda_{k-1}\lambda_{k} < -1 < 0$, berakibat $\lambda_{k-1} \neq 0$ dan $\lambda_{k} \neq 0$ sedemikian hingga dari Pertidaksamaan \eqref{3.39} diperoleh
+    \begin{equation*}
+        \lambda_{k-1}\frac{x_{(k+1)j}}{x_{kj}} < -\lambda_{k-1}\lambda_{k} < 0,
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+        0 < -\lambda_{k}\frac{x_{kj}}{x_{(k+1)j}} < 1.
+    \end{equation*}
+    Berdasarkan induksi tersebut dapat disimpulkan bahwa Pertidaksamaan \eqref{3.38} berlaku. Hal ini menyebabkan kontradiksi dengan Persamaan \eqref{3.37} yang berdasarkan Pertidaksamaan \eqref{3.38} diperoleh $x_{jj} \neq 0$. Hal ini menyebabkan pengandaian harus diingkar sehingga dapat disimpulkan $x_{(n-1)j} \neq 0$.
+
+    Dengan cara yang sama diandaikan $x_{2j} = 0$ sehingga diperoleh Persamaan \eqref{x2eq0}. Jika $x_{(n-1)j} = 0$, maka diperoleh Persamaan \eqref{3.37} yang menyebabkan kontradiksi dengan Persamaan \eqref{x2eq0} dikarenakan $(1 - \alpha_j )x_{(j+1)j} = 0$. Jika $x_{(n-1)j} \neq 0$, maka persamaan terakhir dari Sistem Persamaan \eqref{3.36} dapat dituliskan sebagai
+    \begin{equation*}
+        -\lambda_n\frac{x_{nj}}{x_{(n-1)j}} = \alpha_n,
+    \end{equation*}
+    yang berakibat
+    \begin{equation*}
+        0 < -\lambda_n\frac{x_{nj}}{x_{(n-1)j}} < 1.
+    \end{equation*}
+    Selanjutnya akan ditunjukkan secara induksi
+    \begin{equation}
+        0 < -\lambda_i\frac{x_{ij}}{x_{(i-1)j}} < 1, \quad i=n,~n-1,\dots,~s+1. \label{3.41}
+    \end{equation}
+    Diasumsikan Pertidaksamaan \eqref{3.41} berlaku untuk $i=k+1$, sehingga dapat dituliskan
+    \begin{equation*}
+        0 < -\lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}} < 1,
+    \end{equation*}
+    dengan $x_{kj} \neq 0$. Lalu dikarenakan $x_{kj} \neq 0$ dan $0<\alpha_k<1$ maka dari Sistem Persamaan \eqref{3.36} diperoleh
+    \begin{align*}
+         &&\alpha_kx_{(k-1)j} + \lambda_kx_{kj} +& (1 - \alpha_k)x_{(k+1)j} = 0, \\
+         &\Longrightarrow&-\lambda_{k+1}\lambda_{k}=\alpha_k\lambda_{k+1}\frac{x_{(k-1)j}}{x_{kj}} +& (1 - \alpha_k)\lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}}, \\
+         &\Longrightarrow&\min(\lambda_{k+1}\frac{x_{(k-1)j}}{x_{kj}},\lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}}) \leq & -\lambda_{k+1}\lambda_{k} \leq \max(\lambda_{k+1}\frac{x_{(k-1)j}}{x_{kj}},\lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}}).
+    \end{align*}
+    Diperhatikan bahwa $-\lambda_{k+1}\lambda_{k} < -1$ dan $\lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}} > -1$ sehingga diperoleh 
+    \begin{equation*}
+        \lambda_{k+1}\frac{x_{(k-1)j}}{x_{kj}} < \lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}},
+    \end{equation*}
+    berakibat
+    \begin{equation}\label{3.42}
+        \lambda_{k+1}\frac{x_{(k-1)j}}{x_{kj}} < -\lambda_{k+1}\lambda_{k} < \lambda_{k+1}\frac{x_{(k+1)j}}{x_{kj}}.
+    \end{equation}
+    Lalu dikarenakan $-\lambda_{k+1}\lambda_{k} < -1 < 0$, berakibat $\lambda_{k+1} \neq 0$ dan $\lambda_{k} \neq 0$ sedemikian hingga dari Pertidaksamaan \eqref{3.42} diperoleh
+    \begin{equation*}
+        \lambda_{k+1}\frac{x_{(k-1)j}}{x_{kj}} < -\lambda_{k+1}\lambda_{k} < 0,
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+        0 < -\lambda_{k}\frac{x_{kj}}{x_{(k-1)j}} < 1.
+    \end{equation*}
+    Berdasarkan induksi tersebut dapat disimpulkan bahwa Pertidaksamaan \eqref{3.41} berlaku yang menyebabkan kontradiksi terhadap Persamaan \eqref{x2eq0} di mana $x_{(j+1)j} \neq 0$ sehingga pengandaian diingkar berakibat $x_{2j} \neq 0$.
+
+    Setelah diperoleh bahwa $x_{2j} \neq 0$ dan $x_{(n-1)j} \neq 0$ yang menyebabkan Pertidaksamaan \eqref{3.38} dan Pertidaksamaan \eqref{3.41} berlaku sedemikian hingga diperoleh
+    \begin{align*}
+        0 < -\lambda_{j-1}\frac{x_{(j-1)j}}{x_{(j)j}} < 1,\\
+        0 < -\lambda_{j+1}\frac{x_{(j+1)j}}{x_{(j)j}} < 1,
+    \end{align*}
+    dengan $\lambda_{j-1}\lambda_j>1$ dan $\lambda_{j}\lambda_{j+1}>1$ berakibat
+    \begin{align}
+        &&0 <& -\lambda_{j-1}\frac{x_{(j-1)j}}{x_{(j)j}} < 1 < \lambda_{j-1}\lambda_j, \notag \\
+        &\Longrightarrow&0 <& -\frac{x_{(j-1)j}}{\lambda_{j}x_{jj}} < \frac{1}{\lambda_{j-1}\lambda_j}, \label{3.43}
+    \end{align}
+    dan
+    \begin{align}
+        &&0 <& -\lambda_{j+1}\frac{x_{(j+1)j}}{x_{(j)j}} < 1 < \lambda_{j}\lambda_{j+1}, \notag \\
+        &\Longrightarrow&0 <& -\frac{x_{(j+1)j}}{\lambda_{j}x_{jj}} < \frac{1}{\lambda_{j+1}\lambda_j}. \label{3.44}
+    \end{align}
+    Selanjutnya persamaan ke-$j$ dan Sistem Persamaan \eqref{3.36} dapat dituliskan sebagai
+    \begin{equation*}
+        1 - \frac{1}{\lambda_j x_{jj}} = \alpha_j(-\frac{x_{(j-1)j}}{\lambda_{j}x_{jj}}) + (1 - \alpha_j)(-\frac{x_{(j+1)j}}{\lambda_{j}x_{jj}}),
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+       \min(-\frac{x_{(j-1)j}}{\lambda_{j}x_{jj}},-\frac{x_{(j+1)j}}{\lambda_{j}x_{jj}}) < 1 - \frac{1}{\lambda_j x_{jj}} < \max(-\frac{x_{(j-1)j}}{\lambda_{j}x_{jj}},-\frac{x_{(j+1)j}}{\lambda_{j}x_{jj}}),
+    \end{equation*}
+    dengan menggunakan Pertidaksamaan \eqref{3.43} dan Pertidaksamaan \eqref{3.44} diperoleh
+    \begin{equation}\label{3.45}
+        0 < 1 - \frac{1}{\lambda_j x_{jj}} < \max(\frac{1}{\lambda_{j-1}\lambda_j},\frac{1}{\lambda_{j+1}\lambda_j}).
+    \end{equation}
+    Jika $\mu_j = \min(\lambda_{j-1}\lambda_j, \lambda_{j+1}\lambda_j)$, maka Pertidaksamaan \eqref{3.45} dapat dituliskan sebagai
+    \begin{equation*}
+        0 < 1 - \frac{1}{\lambda_j x_{jj}} < \frac{1}{\mu_j}
+    \end{equation*}
+    sehingga diperoleh
+    \begin{equation}
+        1 < \lambda_jx_{jj} < \frac{\mu_j}{\mu_j - 1}.
+    \end{equation}
+    Labih lanjut akan ditunjukkan bahwa
+    \begin{equation}\label{3.47}
+        0 <(-1)^{i-j}x_{ij} \prod_{t=t_1}^{t_2}{\lambda_t}<\frac{\mu_{j}}{\mu_j - 1}, \quad i=1,~2,\dots,~j-1,~j+1,\dots,~n,
+    \end{equation}
+    dengan $t_1=\min(i,j)$ dan $t_2=\max(i,j)$. Jika Pertidaksamaan \eqref{3.47} berlaku untuk $i=k<j$, maka diperoleh
+    \begin{equation*}
+        0 <(-1)^{k-j}x_{kj} \prod_{t=k}^{j}{\lambda_t}<\frac{\mu_{j}}{\mu_j - 1}.
+    \end{equation*}
+    Selanjutnya dengan memperhatikan Pertidaksamaan \eqref{3.38} diperoleh
+    \begin{equation*}
+        0 <\frac{(-1)^{(k-1)-j}x_{(k-1)j} \prod_{t=k-1}^{j}{\lambda_t}}{(-1)^{k-j}x_{kj} \prod_{t=k}^{j}{\lambda_t}}<1,
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+        0 <(-1)^{(k-1)-j}x_{(k-1)j} \prod_{t=k-1}^{j}{\lambda_t}<(-1)^{k-j}x_{kj} \prod_{t=k}^{j}{\lambda_t}<\frac{\mu_{j}}{\mu_j - 1},
+    \end{equation*}
+    sehingga dapat disimpulkan Pertidaksamaan \eqref{3.47} berlaku untuk $i=1,~2,\dots,~j-1$. Sebaliknya jika Pertidaksamaan \eqref{3.47} berlaku untuk $i=k>j$, maka diperoleh
+    \begin{equation*}
+        0 <(-1)^{k-j}x_{kj} \prod_{t=j}^{k}{\lambda_t}<\frac{\mu_{j}}{\mu_j - 1}.
+    \end{equation*}
+    Selanjutnya dengan memperhatikan Pertidaksamaan \eqref{3.41} diperoleh
+    \begin{equation*}
+        0 <\frac{(-1)^{(k+1)-j}x_{(k+1)j} \prod_{t=j}^{k+1}{\lambda_t}}{(-1)^{k-j}x_{kj} \prod_{t=j}^{k}{\lambda_t}}<1,
+    \end{equation*}
+    berakibat
+    \begin{equation*}
+        0 <(-1)^{(k+1)-j}x_{(k+1)j} \prod_{t=j}^{k+1}{\lambda_t}<(-1)^{k-j}x_{kj} \prod_{t=j}^{k}{\lambda_t}<\frac{\mu_{j}}{\mu_j - 1},
+    \end{equation*}
+    sehingga dapat disimpulkan Pertidaksamaan \eqref{3.47} berlaku untuk $i=j+1,~j+2,\dots,~n$.
+\end{proof}
+
+\begin{contoh}
+    Diberikan matriks $A$ sebagai
+    \begin{gather*}
+        A=\begin{bmatrix}
+            3 & 0.7 & 0 & 0 & 0 \\
+            0.4 & 2 & 0.6 & 0 & 0 \\
+            0 & 0.5 & 4 & 0.5 & 0 \\
+            0 & 0 & 0.4 & 7 & 0.6 \\ 
+            0 & 0 & 0 & 0.3 & 3
+        \end{bmatrix}.
+    \end{gather*}
+    Diperoleh matriks inversnya
+    \begin{gather*}
+        A^{-1}=\begin{bmatrix}
+            0.3503 & -0.1274 & 0.0193 & -0.0014 & 0.0003 \\
+            -0.0728 & 0.5461 & -0.0825 & 0.0060 & -0.0012 \\
+            0.0092 & -0.0688 & 0.2622 & -0.0191 & 0.0038 \\
+            -0.0005 & 0.0040 & -0.0152 & 0.1465 & -0.0293\\ 
+            0.0001 & -0.0008 & 0.0030 & -0.0293 & 0.3392
+        \end{bmatrix}.
+    \end{gather*}
+    Jika diperhatikan semua elemen dari $A^{-1}$ memenuhi pertidaksamaan yang diberikan pada Lema \ref{3.4.1}.
+\end{contoh}
+
+Lema \ref{3.4.1} menjadi landasan untuk membuktikan lema selanjutnya yang akan digunakan untuk menentukan order akurasi dari spline kubik monoton dengan regularitas maksimum. Memperhatikan Lema \ref{3.4.1} dan Persamaan \eqref{3.15} yang saling berkaitan karena matriks $A$ pada Persamaan \eqref{3.15} memenuhi kondisi dari Lema \ref{3.4.1} yang menyebabkan munculnya lema selanjutnya.
+
+\begin{lemma}\label{pertidaksamaanAInvers}
+    Misal $n \in \N$, $0 \leq \mu_i,\lambda_i \leq 1$ dengan $i=1,~2,\dots,~n$ sehingga berlaku
+    \begin{equation*}
+        \mu_i + \lambda_i = 1,
+    \end{equation*}
+    dan $A \in \R^{n \times n}$ yang didefinisikan sebagai
+    \begin{equation*}
+        A:=
+        \begin{bmatrix}
+            2 & \mu_1 \\
+            \lambda_2 & 2 & \mu_2 \\
+            & \lambda_3 & 2 & \mu_3 \\
+            && \ddots & \ddots & \ddots \\
+            &&&\lambda_{m-1} & 2 & \mu_{m-1} \\
+            &&&&\lambda_{m} & 2
+        \end{bmatrix}.
+    \end{equation*}
+    Jika elemen dari $A^{-1}$ dinotasikan $x_{ij}$, maka
+    \begin{equation*}
+        |x_{ij}| \leq \frac{2}{3} 2^{-|i-j|},\quad  i,j=1,~2,\dots,~n.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Matriks $A$ merupakan matriks tridiagonal yang memenuhi kondisi Lema \ref{3.4.1} sedemikian hingga berdasarkan lema tersebut diperoleh pertidaksamaan untuk elemen dari $A^{-1}$ sebagai berikut
+    \begin{equation*}
+        (-1)^{i-j}x_{ij} 2^{|i-j|+1}<\frac{4}{4 - 1}, \quad i,j=1,~2,\dots,~n,
+    \end{equation*}
+    sehingga berakibat
+    \begin{equation*}
+        |x_{ij}|<\frac{2}{3} 2^{-|i-j|}, \quad i,j=1,~2,\dots,~n.
+    \end{equation*}
+\end{proof}
+\begin{contoh}
+    Diberikan matriks $A$ sebagai berikut
+    \begin{gather*}
+        A=\begin{bmatrix}
+            2 & 0.5 & 0 & 0 & 0 \\
+            0.5 & 2 & 0.5 & 0 & 0\\
+            0 & 0.5 & 2 & 0.5 & 0\\
+            0 & 0 & 0.5 & 2 & 0.5 \\
+            0 & 0 & 0 & 0.5 & 2
+        \end{bmatrix},
+    \end{gather*}
+    diperoleh invers dari matriksnya adalah
+    \begin{gather*}
+    A^{-1}=\begin{bmatrix}
+        0.5359 & -0.1436 & 0.0385 & -0.0103 & 0.0026 \\
+        -0.1436 & 0.5744 & -0.1538 & 0.0410 & -0.0103\\
+        0.0385 & -0.1538 & 0.5769 & -0.1538 & 0.0385\\
+        -0.0103 & 0.0410 & -0.1538 & 0.5744 & -0.1436 \\
+        0.0026 & -0.0103 & 0.0385 & -0.1436 & 0.5359
+    \end{bmatrix}.
+    \end{gather*}
+    Jika diperhatikan 
+    \begin{gather*}
+        |x_{ij}| \leq \frac{2}{3} 2^{-|i-j|},\quad  i,j=1,~2,~3,~4,~5,
+    \end{gather*}
+    yang artinya pertidaksamaan elemen invers matriks $A$ pada Lema \ref{pertidaksamaanAInvers} berlaku.
+\end{contoh}
+
+\begin{proposisi}\label{prpsi_l0}
+Misal $\hat{h} < 1$, $f(x) \in C^4([x_1,x_{i_0}])$ dan $L > 0$ sehingga $|f^{(4)}(x)| \leq L$, untuk setiap $x\in[x_1,x_{i_0}]$. Misal $p_{i_0},~T>0$ dan $A_{i_0^-},~\dot{F}_{i_0^-},~B_{i_0^-}$ didefinisikan pada Persamaan \eqref{splReg1}, \eqref{splReg2}, dan \eqref{splReg3} yang memenuhi $|f_{i_0}'-\Tilde{f}_{i_0}|=T\hat{h}^{p_{i_0}}$ dan $A_{i_0^-}\dot{F}_{i_0^-} = B_{i_0^-}$. Jika $i_0 > 3 - \log_2(\hat{h})$ dan terdapat $K>0$ sehingga $\frac{\hat{h}}{h_i} \leq K$ untuk setiap $i=1,~2,\dots,~i_0-1$, maka terdapat bilangan bulat $l_0<i_0-1$ sehingga
+\begin{align*}
+    |\dot{f}_i-f_i'|=
+\begin{cases}
+O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &2 \leq i\leq l_0,\\
+O(\hat{h}^{p_{i_0}}), &l_0<i\leq i_0-1.
+\end{cases}
+\end{align*}
+\end{proposisi}
+
+\begin{proof}
+    Didefinisikan vektor
+    \begin{align*}
+        r_{i_0^{-}}=
+        \begin{bmatrix}
+        (r_{i_0^{-}})_2\\
+        \vdots\\
+        (r_{i_0^{-}})_{i_0-1}
+        \end{bmatrix}
+        = A_{i_0^-}(\dot{F}_{i_0^-} - F_{i_0^-}') = A_{i_0^-}\dot{F}_{i_0^-} - A_{i_0^-}F_{i_0^-}' = B_{i_0^-} - A_{i_0^-}F_{i_0^-}',
+    \end{align*}
+    serta $A = A_{i_0}$ sebagaimana yang ada pada Persamaan \eqref{system_i0}.
+    Jika $2 < i \leq i_0 - 2$, maka berdasarkan Lema \ref{3.2.2} diperoleh
+    \begin{align*}
+        |(r_{i_0^{-}})_i| =& |b_i - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}'|\\
+        =&|3\lambda_{i-1}m_{i-1} + 3\mu_{i-1}m_{i} - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}'| \\
+        =&|R(i)| \leq \Bigg( \frac{17k + k^2}{16} + 1 \Bigg) L\hat{h}^3 = O(\hat{h}^3).
+    \end{align*}
+    Ketika $i=2$ dipeoleh
+    \begin{align*}
+        |(r_{i_0^{-}})_2| =& |b_2 - 2f_2' - \mu_{1}f_{3}'|\\
+        =&|3\lambda_{1}m_{1} + 3\mu_{1}m_{2} - \lambda_1f_1' - 2f_2' - \mu_{1}f_{3}'| \\
+        =&|R(2)| \leq \Bigg( \frac{17k + k^2}{16} + 1 \Bigg) L\hat{h}^3 = O(\hat{h}^3),
+    \end{align*}
+    sedangkan ketika $i = i_0 - 1$ diperoleh
+    \begin{align*}
+        |(r_{i_0^{-}})_{i_0 - 1}| =& |b_{i_0-1} - \lambda_{i_0-2}f_{i_0-2}' - 2f_{i_0-1}'| \\
+        =& |b_{i_0-1} - \lambda_{i_0-2}f_{i_0-2}' - 2f_{i_0-1}' + (-\mu_{i_0-2}f_{i_0}' + \mu_{i_0-2}f_{i_0}')|\\
+        =&\Bigg| \Big( 3(\lambda_{i_0-2}m_{i_0-2} + \mu_{i_0-2}m_{i_0 - 1}) - \lambda_{i_0-2}f_{i_0-2}'  \\
+        &- 2f_{i_0 - 1}'- \mu_{i_0 - 2}f_{i_0}' \Big) + \mu_{i_0 - 2}(f_{i_0}' - \Tilde{f}_{i_0})\Bigg| \\
+        \leq&|R(i_0 - 1)| + \mu_{i_0-2}|f_{i_0}' - \Tilde{f}_{i_0}| \\
+        \leq&\Bigg( \frac{17k + k^2}{16} + 1 \Bigg)L\hat{h}^3 + \mu_{i_0 - 2} T \hat{h}^{p_{i_0}} = O(\hat{h}^3) + \mu_{i_0 - 2} T \hat{h}^{p_{i_0}}.
+    \end{align*}
+
+    Diperhatikan bahwa $i_0 > 3 - \log_2(\hat{h})$, berakibat $1 < (i_0 - 2) + \log_2(\hat{h})$ sehingga dapat didefinisikan
+    \begin{align*}
+        \Tilde{l}_0 :=(i_0 - 2) + \log_2(\hat{h}),
+    \end{align*}
+    dengan
+    \begin{align*}
+        &&i \leq (i_0 - 2) + \log_2(\hat{h}), \\
+        &\Leftrightarrow&(i - (i_0 - 2))\log(2) \leq \log(\hat{h}),\\
+        &\Leftrightarrow&2^{i-(i_0 - 2)} \leq \hat{h}.
+    \end{align*}
+    Berdasarkan Lema \ref{pertidaksamaanAInvers} diperoleh untuk $1 \leq i \leq \Tilde{l}_0$ berlaku
+    \begin{align*}
+        |A_{i,{i_0-2}}^{-1}| \leq \frac{2}{3}2^{i-(i_0 - 2)} \leq \hat{h},
+    \end{align*}
+    dan 
+    \begin{align*}
+        |\dot{f}_{i+1} - f_{i+1}'| =& \Bigg| \sum_{j=1}^{i_0 - 2} A_{i,j}^{-1}r_{j+1} \Bigg| \leq O(\hat{h}^3) + |A_{i,{i_0-2}}^{-1}|T\hat{h}^{p_{i_0}} \\
+        \leq& O(\hat{h}^3) + \hat{h}O(\hat{h}^{p_{i_0}}) = O(\hat{h}^{\min(3,p_{i_0}+1)}).
+    \end{align*}
+    Dipilih $l_0 = \Tilde{l}_0 + 1$ sehingga diperoleh
+    \begin{align*}
+        |\dot{f}_i - f_i'|=\begin{cases}
+            O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &2\leq i\leq l_0,\\
+            O(\hat{h}^{p_{i_0}}), \quad &l_0<i\leq i_0 - 1.
+        \end{cases}
+    \end{align*}
+\end{proof}
+
+\begin{proposisi}\label{prpsi_l1}
+Misal $\hat{h} < 1$, $f(x) \in C^4([x_{i_0},x_{n}])$ dan $L > 0$ sehingga \mbox{$|f^{(4)}(x)| \leq L$}, untuk setiap $x\in[x_{i_0},x_{n}]$. Misal $p_{i_0},~T>0$ dan $A_{i_0^+},~\dot{F}_{i_0^+},~B_{i_0^+}$ didefinisikan pada Persamaan \eqref{splReg1}, \eqref{splReg2}, dan \eqref{splReg3} yang memenuhi $|f_{i_0}'-\Tilde{f}_{i_0}|=T\hat{h}^{p_{i_0}}$ dan $A_{i_0^+}\dot{F}_{i_0^+} = B_{i_0^+}$. Jika $n > i_0+1 - \log_2(\hat{h})$ dan terdapat $K>0$ sehingga $\frac{\hat{h}}{h_i} \leq K$ untuk setiap $i=i_0,~i_0+1,\dots,~n-1$, maka terdapat bilangan bulat $i_0+1<l_1$ sehingga
+\begin{align*}
+    |\dot{f}_i-f_i'|=
+\begin{cases}
+O(\hat{h}^{p_{i_0}}), &i_0 + 1 \leq i< l_1,\\
+O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &l_1 \leq i\leq n-1.
+\end{cases}
+\end{align*}
+\end{proposisi}
+
+\begin{proof}
+    Didefinisikan vektor
+    \begin{align*}
+        r_{i_0^{+}}=
+        \begin{bmatrix}
+        (r_{i_0^{+}})_{i_0 + 1}\\
+        \vdots\\
+        (r_{i_0^{+}})_{n-1}
+        \end{bmatrix}
+        = A_{i_0^+}(\dot{F}_{i_0^+} - F_{i_0^+}') = A_{i_0^+}\dot{F}_{i_0^+} - A_{i_0^+}F_{i_0^+}' = B_{i_0^+} - A_{i_0^+}F_{i_0^+}',
+    \end{align*}
+     serta $A = A_{i_0}$ sebagaimana yang ada pada Persamaan \eqref{system_i0}.
+    Jika $i_0 + 1 < i \leq n - 2$, maka berdasarkan Lema \ref{3.2.2} diperoleh
+    \begin{align*}
+        |(r_{i_0^{+}})_i| =& |b_i - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}'|\\
+        =&|3\lambda_{i-1}m_{i-1} + 3\mu_{i-1}m_{i} - \lambda_{i-1}f_{i-1}' - 2f_i' - \mu_{i-1}f_{i+1}'| \\
+        =&|R(i)| \leq \Bigg( \frac{17k + k^2}{16} + 1 \Bigg) L\hat{h}^3 = O(\hat{h}^3).
+    \end{align*}
+    Ketika $i=n - 1$ dipeoleh
+    \begin{align*}
+        |(r_{i_0^{+}})_{n - 1}| =& |b_{n-1} - 2f_{n-1}' - \mu_{n-2}f_{n}'|\\
+        =&|3\lambda_{n-2}m_{n-2} + 3\mu_{n-2}m_{n-1} - \lambda_{n-2}f_{n-2}' - 2f_{n-1}' - \mu_{n-2}f_{n}'| \\
+        =&|R(n-1)| \leq \Bigg( \frac{17k + k^2}{16} + 1 \Bigg) L\hat{h}^3 = O(\hat{h}^3),
+    \end{align*}
+    sedangkan ketika $i = i_0 + 1$ diperoleh
+    \begin{align*}
+        |(r_{i_0^{+}})_{i_0 + 1}| =& |b_{i_0+1}  - 2f_{i_0+1}'| - \mu_{i_0}f_{i_0+2}' \\
+        =& |b_{i_0+1} - 2f_{i_0+1}' - \mu_{i_0}f_{i_0+2}' + (-\lambda_{i_0}f_{i_0}' + \lambda_{i_0}f_{i_0}')|\\
+        =&\Bigg| \Big( 3(\lambda_{i_0}m_{i_0} + \mu_{i_0}m_{i_0 + 1}) - \lambda_{i_0}f_{i_0}' - 2f_{i_0 + 1}' - \mu_{i_0}f_{i_0+2}' \Big) + \lambda_{i_0}(f_{i_0}' - \Tilde{f}_{i_0})\Bigg| \\
+        \leq&|R(i_0 + 1)| + \lambda_{i_0}|f_{i_0}' - \Tilde{f}_{i_0}| \\
+        \leq&\Bigg( \frac{17k + k^2}{16} + 1 \Bigg)L\hat{h}^3 + \lambda_{i_0 - 2} T \hat{h}^{p_{i_0}} = O(\hat{h}^3) + \lambda_{i_0 - 2} T \hat{h}^{p_{i_0}}.
+    \end{align*}
+    
+    Diperhatikan bahwa $n > i_0 + 1 - \log_2(\hat{h})$, berakibat $n-2 > (i_0 - 1) - \log_2(\hat{h})$ sehingga dapat didefinisikan
+    \begin{align*}
+        \Tilde{l}_1 :=(i_0 - 1) - \log_2(\hat{h}),
+    \end{align*}
+    dengan
+    \begin{align*}
+        && i \geq (i_0 - 1) - \log_2(\hat{h}),\\
+        &\Leftrightarrow&((i_0-1) - i)\log(2) \leq \log(\hat{h}),\\
+        &\Leftrightarrow&2^{(i_0-1) - i} \leq \hat{h}.
+    \end{align*}
+    Berdasarkan Lema \ref{pertidaksamaanAInvers} diperoleh untuk $\Tilde{l}_1 \leq i \leq n-3$
+    \begin{align*}
+        |A_{i,{i_0-1}}^{-1}| \leq \frac{2}{3}2^{(i_0 - 1) - i} \leq \hat{h},
+    \end{align*}
+    dan 
+    \begin{align*}
+        |\dot{f}_{i+2} - f_{i+2}'| =& \Bigg| \sum_{j=i_0-1}^{n - 3} A_{i,j}^{-1}r_{j+2} \Bigg| \leq O(\hat{h}^3) + |A_{i,{i_0-1}}^{-1}|T\hat{h}^{p_{i_0}} \\
+        \leq& O(\hat{h}^3) + \hat{h}O(\hat{h}^{p_{i_0}}) = O(\hat{h}^{\min(3,p_{i_0}+1)}).
+    \end{align*}
+    Dipilih $l_1 = \Tilde{l}_1 + 2$ sehingga diperoleh
+    \begin{align*}
+    |\dot{f}_i-f_i'|=
+        \begin{cases}
+        O(\hat{h}^{p_{i_0}}), &i_0 + 1 \leq i< l_1,\\
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &l_1 \leq i\leq n-1.
+        \end{cases}
+\end{align*}
+\end{proof}
+
+ Proposisi \ref{prpsi_l0} dan Proposisi \ref{prpsi_l1}  memberikan tingkat akurasi dari metode spline kubik monoton dengan regularitas maksimum dengan syarat besar interval dan banyak titik tertentu. Perlu diperhatikan bahwa selalu diasumsikan bahwa order akurasi pendekatan pada indeks $i_0$ berlaku $p_{i_0} \leq 3$ sehingga diperoleh $\min(3, p_{i_0}) = p_{i_0}$. Akibat berikut merupakan akibat langsung dari kedua proposisisi tersebut. 
+
+\begin{akibat}\label{crlyR}
+    Misal $\hat{h} < 1$, $f(x) \in C^4([x_{1},x_{n}])$ dan $L > 0$ sehingga \mbox{$|f^{(4)}(x)| \leq L$}, untuk setiap $x\in[x_{1},x_{n}]$. Misal $p_{i_0},~T>0$ dan $A_{i_0},~\dot{F}_{i_0},~B_{i_0}$ didefinisikan pada Persamaan \eqref{system_i0} yang memenuhi $|f_{i_0}'-\Tilde{f}_{i_0}|=T\hat{h}^{p_{i_0}}$ dan $A_{i_0}\dot{F}_{i_0} = B_{i_0}$. Jika $3 - \log_2(\hat{h}) < i_0 < (n - 1) + \log_2(\hat{h})$ dan terdapat $K>0$ sehingga $\frac{\hat{h}}{h_i} \leq K$ untuk setiap $i=1,~2,\dots,~n-1$, maka terdapat bilangan bulat $l_0<i_0<l_1$ sehingga
+    \begin{align*}
+            |\dot{f}_i-f_i'|=
+        \begin{cases}
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &2 \leq i\leq l_0, \\
+        O(\hat{h}^{p_{i_0}}), &l_0 < i< l_1,\\
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &l_1 \leq i\leq n-1.
+        \end{cases}
+    \end{align*}
+\end{akibat}
+
+\begin{proof}
+    Diperhatikan bahwa 
+    $$3 - \log_2(\hat{h}) < i_0 < (n - 1) + \log_2(\hat{h}),$$ 
+    sehingga berdasarkan Proposisi \ref{prpsi_l0} dan Proposisi \ref{prpsi_l1} terdapat $l_0$ dan $l_1$ sehingga berlaku
+    \begin{align*}
+    |\dot{f}_i-f_i'|=
+        \begin{cases}
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &2 \leq i\leq l_0,\\
+        O(\hat{h}^{p_{i_0}}), &l_0<i\leq i_0-1,
+        \end{cases}
+    \end{align*}
+    dan
+    \begin{align*}
+    |\dot{f}_i-f_i'|=
+        \begin{cases}
+        O(\hat{h}^{p_{i_0}}), &i_0 + 1 \leq i< l_1,\\
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &l_1 \leq i\leq n-1.
+        \end{cases}
+    \end{align*}
+    Dikarenakan $|f_{i_0}'-\Tilde{f}_{i_0}|=T\hat{h}^{p_{i_0}} = O(\hat{h}^{p_{i_0}})$, maka diperoleh
+    \begin{align*}
+            |\dot{f}_i-f_i'|=
+        \begin{cases}
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &2 \leq i\leq l_0, \\
+        O(\hat{h}^{p_{i_0}}), &l_0 < i< l_1,\\
+        O(\hat{h}^{\min(3,p_{i_0}+1)}), \quad &l_1 \leq i\leq n-1.
+        \end{cases}
+    \end{align*}
+\end{proof}
+
+Akibat \eqref{crlyR} memberikan order akurasi untuk fungsi
+$f \in C^4([x_1,x_n])$ namun tidak berlaku ketika fungsinya tidak kontinu pada suatu titik di dalam intervalnya. Untuk mengatasi hal tersebut diberikan proposisi berikut yang berlaku untuk fungsi $f \in C^4([x_1,x_{i_0}] \cap [x_{i_0 +1},x_n])$.
+
+\begin{proposisi}\label{prpsslast}
+    Misal $\hat{h} < 1$, $f(x) \in C^4([x_1,x_{i_0}] \cap [x_{i_0 +1},x_n])$ dan $L > 0$ sehingga $|f^{(4)}(x)| \leq L$, untuk setiap $x\in[x_1,x_{i_0}] \cap [x_{i_0 +1},x_n]$. Misal $p_{i_0},~p_{i_0 + 1},~T,~r>0$ dan $A_{i_0^-},~\dot{F}_{i_0^-},~B_{i_0^-},~A_{(i_0+1)^+},~\dot{F}_{(i_0+1)^+},~B_{(i_0+1)^+}$ didefinisikan pada Persamaan \eqref{splReg1}, \eqref{splReg2}, dan \eqref{splReg3} yang memenuhi $|f_{l}'-\Tilde{f}_{l}|=T\hat{h}^{p_{l}}$, $l=i_0, i_0+1$, $A_{i_0}^-\dot{F}_{i_0}^- = B_{i_0}^-$ dan $A_{(i_0+1)^+}\dot{F}_{(i_0+1)^+} = B_{(i_0+1)^+}$. Jika $3 - r\log_2(\hat{h}) < i_0 < (n - 1) + r\log_2(\hat{h})$ dan terdapat $K>0$ sehingga $\frac{\hat{h}}{h_i} \leq K$ untuk setiap $i=1,~2,\dots,~n-1$, maka terdapat bilangan bulat $l_0<i_0,~i_0+1< l_1$ sehingga
+    \begin{align*}
+            |\dot{f}_i-f_i'|=
+        \begin{cases}
+        O(\hat{h}^{\min(3,p_{i_0}+r)}), \quad &2 \leq i\leq l_0, \\
+        O(\hat{h}^{p_{i_0}}), & l_0 < i \leq i_0,\\
+        O(\hat{h}^{p_{i_0+1}}), &i_0+1 \leq i < l_1,\\
+        O(\hat{h}^{\min(3,p_{i_0+1}+r)}), \quad &l_1 \leq i\leq n-1,
+        \end{cases}
+    \end{align*}
+    dengan
+    \begin{align*}
+        l_0 = (i_0-1) + r\log_2(\hat{h}),
+    \end{align*}
+    dan
+    \begin{align*}
+        l_1 = (i_0+2) - r\log_2(\hat{h}).
+    \end{align*}
+\end{proposisi}
+
+\begin{proof}
+    Sama seperti ketika ketika membuktikan Proposisi \ref{prpsi_l0} dan Proposisi \ref{prpsi_l1} didefinisikan $r_{i_0^-}$, $r_{(i_0 + 1)^+}$ dan 
+    \begin{align*}
+        A = \begin{bmatrix}
+            A_{i_0^-} & \\
+            & A_{(i_0+1)^+}.
+        \end{bmatrix}
+    \end{align*}
+
+    Diperhatikan bahwa $3 - r \log_2(\hat{h}) < i_0 (n-1) + r\log_2(\hat{h})$, berakibat $\\1 < (i_0 - 2) + r\log_2(\hat{h0})$ dan $n-2> (i_0 - 1) - r\log_2(\hat{h})$ sehingga dapat didefinisikan
+    \begin{align*}
+        \Tilde{l}_0:=(i_0 - 2) + r\log_2(\hat{h}),
+    \end{align*}
+    dan
+    \begin{align*}
+        \Tilde{l}_1:=(i_0 - 1) - r\log_2(\hat{h}).
+    \end{align*}
+    Dari $\Tilde{l}_0$ yang telah didefinisikan diperoleh untuk $i \leq \Tilde{l}_0$ berlaku
+    \begin{align*}
+        && i \leq (i_0 - 2) + r\log_2(\hat{h}), \\
+        &\Leftrightarrow& (i - (i_0 - 2))\log(2) \leq r\log(\hat{h}), \\
+        &\Leftrightarrow& 2^{i - (i_0 - 2)} \leq \hat{h}^r.
+    \end{align*}
+    
+     Berdasarkan Lema \ref{pertidaksamaanAInvers} diperoleh untuk $1 \leq i \leq \Tilde{l}_0$ berlaku 
+    \begin{align*}
+        |A_{i,{i_0-2}}^{-1}| \leq \frac{2}{3}2^{i-(i_0 - 2)} \leq \hat{h}^r,
+    \end{align*}
+    dan 
+    \begin{align*}
+        |\dot{f}_{i+1} - f_{i+1}'| =& \Bigg| \sum_{j=1}^{i_0 - 2} A_{i,j}^{-1}r_{j+1} \Bigg| \leq O(\hat{h}^3) + |A_{i,{i_0-2}}^{-1}|T\hat{h}^{p_{i_0}} \\
+        \leq& O(\hat{h}^3) + \hat{h}^rO(\hat{h}^{p_{i_0}}) = O(\hat{h}^{\min(3,p_{i_0}+r)}).
+    \end{align*}
+    Dipilih $l_0 = \Tilde{l}_0 + 1$ sehingga diperoleh
+    \begin{align*}
+        |\dot{f}_i - f_i'|=\begin{cases}
+            O(\hat{h}^{\min(3,p_{i_0}+r)}), \quad &2\leq i\leq l_0,\\
+            O(\hat{h}^{p_{i_0}}), \quad &l_0<i\leq i_0.
+        \end{cases}
+    \end{align*}
+
+    Dengan cara yang sama untuk $i \geq \Tilde{l}_1$ berlaku
+    \begin{align*}
+        && i \geq (i_0 - 1) - r\log_2(\hat{h}), \\
+        &\Leftrightarrow& ((i_0 - 1) - i)\log(2) \leq r\log(\hat{h}), \\
+        &\Leftrightarrow& 2^{(i_0 - 1) - i} \leq \hat{h}^r,
+    \end{align*}
+    sehingga berdasarkan Lema \ref{pertidaksamaanAInvers} diperoleh untuk $\Tilde{l}_1 \leq i \leq n-4$ berlaku 
+    \begin{align*}
+        |A_{i,{i_0-1}}^{-1}| \leq \frac{2}{3}2^{i-(i_0 - 1)} \leq \hat{h}^r,
+    \end{align*}
+    dan 
+    \begin{align*}
+        |\dot{f}_{i+3} - f_{i+3}'| =& \Bigg| \sum_{j=i_0-1}^{n - 4} A_{i,j}^{-1}r_{j+3} \Bigg| \leq O(\hat{h}^3) + |A_{i,{i_0-1}}^{-1}|T\hat{h}^{p_{i_0+1}} \\
+        \leq& O(\hat{h}^3) + \hat{h}^rO(\hat{h}^{p_{i_0+1}}) = O(\hat{h}^{\min(3,p_{i_0+1}+r)}).
+    \end{align*}
+    Dipilih $l_1 = \Tilde{l}_1 + 3$ sehingga diperoleh
+    \begin{align*}
+        |\dot{f}_i - f_i'|=\begin{cases}
+            O(\hat{h}^{p_{i_0}}), \quad &i_0 + 1 \leq i < l_1, \\
+            O(\hat{h}^{\min(3,p_{i_0+1}+r)}), \quad &l_1 \leq i \leq n-1.
+        \end{cases}
+    \end{align*}
+\end{proof}
+
+Metode interpolasi spline kubik monoton dengan regularitas maksimum menghasilkan interpolasi dengan regularitas $C^2$ kecuali pada titik di mana nilai pendekatan turunan pertamanya tidak memenuhi syarat monoton. Walaupun hasil interpolasi yang diperoleh memiliki regularitas optimal, interpolasi ini mengalami penurunan tingkat akurasi di sekitar titik yang tidak memenuhi syarat monoton. Oleh karena itu, akan dikonstruksikan metode spline kubik monoton dengan order akurasi maksimum pada bab selanjutnya.
+
+\section{Interpolasi Spline Kubik Monoton dengan Order Akurasi Maksimum}\label{4.3}
+
+Cara lain untuk mempertahankan sifat monoton dari interpolasi adalah dengan mengganti nilai pendekatan turunan hanya pada titik-titik di mana pendekatan turunannya tidak memenuhi syarat monoton tanpa mengubah pendekatan turunan pada titik yang lain. Metode ini menyebabkan interpolasi yang diperoleh memiliki order akurasi yang maksimum namun hasil interpolasinya hanya memiliki regularitas $C^1$ pada persekitaran titik-titik di mana pendekatan turunan pertamanya tidak memenuhi syarat monoton.
+
+Diasumsikan terdapat sebuah titik $x_{i_0}$, dengan $1 < i_0 < n$ yang pada titik tersebut pendekatan turunan pertama tidak memenuhi syarat monoton interpolasi. Pada titik tersebut nilai pendekatan turunannya yaitu $\dot{f}_{i_0}$ akan diganti dengan $\Tilde{f}_{i_0}$ yang dicari dengan menggunakan metode nonlinear sehingga diperoleh
+\begin{gather*}
+    \dot{f}_i = \begin{cases}
+        \sum_{j=1}^{n-2}A_{i-1,j}^{-1}b_{j+1},\quad& \sum_{j=1}^{n-2}|A_{i-1,j}^{-1}b_{j+1}|\leq3\min(|m_{i-1}|,|m_i|), \\
+        \Tilde{f}_i, \quad &\sum_{j=1}^{n-2}|A_{i-1,j}^{-1}b_{j+1}|>3\min(|m_{i-1}|,|m_i|)
+    \end{cases}
+\end{gather*}
+Hal ini menyebabkan persamaan berikut tidak terjamin keberlakuannya
+\begin{align}
+    P_{i_0-2}''(x_{i_0-1}) =& P_{i_0-1}''(x_{i_0-1}),\notag\\
+    P_{i_0-1}''(x_{i_0}) =& P_{i_0}''(x_{i_0}),\label{persTidakTerjamin}\\
+    P_{i_0-1}''(x_{i_0+1}) =& P_{i_0+1}''(x_{i_0+1}),\notag
+\end{align}
+sehingga berakibat langsung pada regularitas dari interpolasi yang dihasilkan. Regularitas interpolasi yang dihasilakan adalah $C^2$ disetiap titik kecuali pada titik $x_{i_o-1},~x_{i_o},~x_{i_o+1}$. Selain regularitas dari interpolasi yang dihasilkan, dengan mengganti nilai turunan pada titik di mana syarat monoton tidak terpenuhi juga mempengaruhi order akurasi interpolasi yang diperoleh. Order akurasi dari interpolasi yang dihasilkan berdasarkan Lema \ref{orderAkurasi} adalah $O(h^4)$ kecuali pada interval $[x_{i_0-1}, x_{i_0}]$ dan $[x_{i_0}, x_{i_0+1}]$.
+
+\begin{proposisi}\label{proposisi4.3.1}
+    Misalkan $f(x) \in C^4([x_1,x_n])$ dan terdapat $L>0$ sehingga berlaku $|f^{(4)}(x)|\leq L,~\forall x \in [x_1,x_n]$. Misalkan $p_{i_0}, T > 0$ dan $A$, $\dot{F}$, $B$ seperti yang didefinisikan pada Persamaan \eqref{3.16} sehingga memenuhi $A\dot{F} = B$. Jika didefinisikan
+    \begin{equation*}
+        \dot{F}_{i_0} = \begin{cases}
+            \Tilde{f}_{i_0},\quad &i = i_0,\\
+            \dot{f_i}, \quad &i \neq i_0,
+        \end{cases}
+    \end{equation*}
+    sehingga $|f'_{i_0}-\Tilde{f}_{i_0}|=T\hat{h}^{p_{i_0}}$ dan terdapat $K>0$ sehingga $\hat{h}/h_i \leq K,$ untuk setiap $i=1,\dots,~n$, maka
+    \begin{equation*}
+        |\dot{f}_{i}-f'_i| = \begin{cases}
+            O(\hat{h}^{p_{i_0}}),\quad &i = i_0,\\
+            O(\hat{h}^{3}), \quad &i \neq i_0.
+        \end{cases}
+    \end{equation*}
+    Lebih lanjut hasil interpolasi spline kubik yang dihasilkan dari Persamaan \eqref{PersHermiteKubik} menggunakan $\dot{F}_{i_0}$ sebagai pendekatan turunan pertamanya memiliki regularitas $C^2$ kecuali pada titik $x_{i_0-1},~x_{i_0}$, dan $x_{i_0+1}$.
+\end{proposisi}
+\begin{proof}
+    Bukti dari preposisi diperoleh langsung dari Teorema \ref{3.3.3} sehingga semua hasil pendekatan turunannya memiliki order akurasi $O(\hat{h}^3)$ kecuali pada titik $i_0$. Pada titik $i_0$ terdapat $p_{i_0}, T > 0$ sehingga berlaku $|f'_{i_0}-\Tilde{f}_{i_0}|=T\hat{h}^{p_{i_0}}$, dapat disimpulkan order akurasi pendekatan turunan pertama pada titik tersebut adalah $O(\hat{h}^{p_{i_0}})$.
+
+    Selanjutnya dengan memperhatikan bahwa Persamaan \eqref{persTidakTerjamin} tidak berlaku karena ada perubahan pada nilai pendekatan turunannya maka hasil interpolasi spline kubik yang diperoleh tidak mempunyai turunan kedua yang kontinu pada titik $x_{i_0-1},~x_{i_0}$, dan $x_{i_0+1}$ sehingga regularitas polinomial interpolasinya adalah $C^2$ kecuali pada titik tersebut.
+\end{proof}
+
+\section{Komputasi Turunan Nonlinear}\label{4.4}
+
+Terdapat dua buah metode yang akan digunakan untuk menentukan $\Tilde{f}_{i_0}$ pada bagian sebelumnya. Metode ini digunakan agar hasil interpolasi yang diperoleh memiliki sifat monoton walaupun hasil pendekatan turunannya yang diperoleh dengan menyelesaikan Persamaan \eqref{3.15} tidak memenuhi syarat monoton pada Teorema \ref{syarat_monoton_3.3.4}.
+
+Dua buah metode yang akan digunakan pada penilitian ini diberikan pada \cite{fritschMN} dan \cite{arandigaMN}. Kedua metode tersebut memiliki tingkat akurasi yang berbeda. Metode pada \cite{fritschMN} menghasilkan turunan pertama dengan tingkat akurasi order pertama, sedangkan metode pada \cite{arandigaMN} menghasilkan turunan pertama dengan tingkat akurasi order kedua. Selanjutnya akan dijelaskan tentang kedua metode tersebut.
+
+\subsection{Metode Fritsch dan Butland}
+
+Salah satu metode yang dapat digunakan untuk mendapatkan nilai pendekatan turunan pertama diberikan pada \cite{fritschMN}, yaitu
+\begin{align}
+    \dot{f}_i^{FB}:=\begin{cases}
+        \frac{3m_{i-1}m_i}{m_{i-1}+2m_{i}},\quad &|m_i|\leq|m_{i-1}|,\\
+        \frac{3m_{i-1}m_i}{m_{i}+2m_{i-1}},\quad &|m_i|>|m_{i-1}|,\\
+        0, \quad &m_{i-1}m_i\leq0.
+    \end{cases} \label{dotf_FB}
+\end{align}
+Diperhatikan bahwa jika $m_{i-1}m_i>0$, maka apabila $|m_i|\leq|m_{i-1}|$ diperoleh
+\begin{align*}
+    |\dot{f}_i^{FB}|=\bigg|\frac{3m_{i-1}m_i}{m_{i-1}+2m_i}\bigg|
+    \leq\frac{|m_{i-1}|}{|m_{i-1}+2m_i|}3|m_i|\leq3|m_i|,
+\end{align*}
+sedangkan apabila $|m_i|>|m_{i-1}|$ diperoleh
+\begin{align*}
+    |\dot{f}_i^{FB}|=\bigg|\frac{3m_{i-1}m_i}{m_{i-1}+2m_i}\bigg|
+    \leq\frac{|m_{i}|}{|m_{i-1}+2m_i|}3|m_{i-1}|\leq3|m_{i-1}|.
+\end{align*}
+Sebaliknya jika $m_{i-1}m_i\leq0$, maka diperoleh $$|\dot{f}_i^{FB}|=0\leq 3\min(|m_{i-1}|,|m_i|).$$
+Metode ini menjamin terpenuhinya syarat monoton pada Teorema \ref{syarat_monoton_3.3.4} sehingga hasil interpolasi yang dihasilkan memiliki sifat monoton.
+
+\begin{lemma}\label{OAFB}
+    Jika $f$ fungsi yang mulus dan $m_{i-1}m_i > 0$, maka
+    \begin{gather*}
+        \dot{f}_i^{FB}=f'(x_i) + O(h).
+    \end{gather*}
+\end{lemma}
+
+\begin{proof}
+    Diperhatikan bahwa jika $m_{i-1}m_i>0$, maka diperoleh pertdaksamaan berikut berlaku
+    \begin{gather}\label{batasFDotFB}
+        \min(m_{i-1},m_i) \leq \dot{f}_i^{FB}
+        \leq \max(m_{i-1},m_i).
+    \end{gather}
+    Selanjutnya dikarenakan $f$ merupakan fungsi yang mulus, maka dapat disimpulkan $m_{i-1} = f'(x_i) + O(h)$ dan $m_{i} = f'(x_i) + O(h)$ dengan $m_i$ metode beda maju dan $m_{i-1}$ metode beda mundur. Setelah itu dengan memperhatikan pertidaksamaan sebelumnya yaitu Pertidaksamaan \eqref{batasFDotFB}, maka dapat disimpulkan $\dot{f}_i^{FB}=f'(x_i) + O(h)$.
+\end{proof}
+
+Lema \ref{OAFB} menjelaskan bahwa metode pendekatan turunan yang diberikan pada \cite{fritschMN} memiliki order akurasi $O(h)$ sehingga berdasarkan Lema \ref{orderAkurasi} hasil interpolasi spline kubik yang dihasilkan dari Persamaan \eqref{PersHermiteKubik} memiliki order akurasi $O(h^2)$.
+
+\subsection{Metode Aràndiga and Yáñez}
+
+Metode nonlinear selanjutnya yang bisa digunakan untuk menjamin hasil interpolasi yang dihasilkan memiliki sifat monoton adalah metode yang diberikan di dalam \cite{arandigaMN}. Sebelum membahas metodenya lebih lanjut didefinisikan terlebih dahulu \textit{weighted arithmetic mean} $M$, untuk menentukan pendekatan $\dot{f}_i$
+\begin{gather}\label{WAM}
+     M_{h_i,h_{i-1}}(m_{i-1},m_{i}) = \frac{(h_im_{i-1} + h_{i-1}m_i)}{(h_i + h_{i-1})}.
+\end{gather}
+Diperhatikan bahwa $m_i$ dan $m_{i-1}$ merupakan metode beda maju dan metode beda mundur sehingga diperoleh
+\begin{align*}
+    m_i = f'(x_i) + \frac{f''(x_i)h_i}{2!} + \frac{f'''(\xi_1)h_i^2}{3!},
+\end{align*}
+dan
+\begin{align*}
+    m_{i-1} = f'(x_i) - \frac{f''(x_i)h_{i-1}}{2!} + \frac{f'''(\xi_2)h_{i-1}^2}{3!},
+\end{align*}
+dengan $\xi_1, \xi_2 \in [x_{i-1},x_{i+1}]$.
+Hal ini mengakibatkan Persamaan \eqref{WAM} dapat dituliskan sebagai
+\begin{align*}
+    M_{h_i,h_{i-1}}(m_{i-1},m_{i}) = f'(x_i) + \frac{ f'''(\xi_2)h_ih_{i-1}^2 + f'''(\xi_1)h_{i-1}h_i^2}{6(h_i + h_{i-1})}.
+\end{align*}
+Jika $h = \max(h_{i-1},h_i)$ dan $L = \max(f'''(\xi_1),f'''(\xi_2))$, maka diperoleh
+\begin{align*}
+    M_{h_i,h_{i-1}}(m_{i-1},m_{i}) \leq f'(x_i) + \frac{L}{6}h_ih_{i-1} \leq f'(x_i) + \frac{L}{6}h^2 = f'(x_i) + O(h^2),
+\end{align*}
+sehingga dapat disimpulkan bahwa $M$ dapat mengestimasi nilai $f'(x_i)$ dengan tingat akurasi order kedua.
+% \begin{lemma}\label{3.4.8}
+%     Jika $x=O(1)$, $y=O(1)$, $|x-1|=O(h)$, dan $xy>0$, maka
+%     \begin{gather*}
+%         \Bigg|\frac{ax+by}{a+b} - \frac{(a+b)xy}{ay+bx}\Bigg|=O(h^2).
+%     \end{gather*}
+% \end{lemma}
+
+% \begin{proof}
+%     Diperhatikan bahwa
+%     \begin{gather*}
+%         \frac{(a+b)xy}{ay+bx} = \frac{ax+by}{a+b}\Bigg(1 - \frac{ab(x-y)^2}{(ax+by)(ay+bx)}\Bigg),
+%     \end{gather*}
+%     sehingga
+%     \begin{align*}
+%         \Bigg| \frac{ax+by}{a+b} - \frac{(a+b)xy}{ay+bx}\Bigg| =& \Bigg|\frac{ax+by}{a+b} \frac{ab(x-y)^2}{(ax+by)(ay+bx)} \Bigg| \\
+%         =& \Bigg|\frac{ax+by}{a+b} \frac{ab}{(ax+by)(ay+bx)} \Bigg||x-y|^2,
+%     \end{align*}
+%     dikarenakan $|x-y|=O(h)$, maka diperoleh
+%     \begin{gather*}
+%         \Bigg|\frac{ax+by}{a+b} - \frac{(a+b)xy}{ay+bx}\Bigg|=O(h^2).
+%     \end{gather*}
+% \end{proof}
+
+% \begin{lemma}\label{3.4.9}
+%     Jika $f$ fungsi yang mulus, $m_{i-1}m_i>0$, dan 
+%     \begin{gather*}
+%         \frac{am_i + bm_{i-1}}{a+b} = f'(x_i) + O(h^m),
+%     \end{gather*}
+%     maka
+%     \begin{gather*}
+%         \frac{(a+b)m_im_{i-1}}{am_{i-1}+bm_{i}} = f'(x_i) + O(h^{\min(m,2)}).
+%     \end{gather*}
+% \end{lemma}
+
+% \begin{proof}
+%     Diperhatikan bahwa $m_{i-1}=f'(x_i)+O(h)$ dan $m_i=f'(x_i)+O(h)$ sehingga diperoleh $m_i - m_{i-1} = O(h)$. Selanjutnya dikarenakan $m_i - m_{i-1} = O(h)$ dan $m_{i-1}m_i>0$, maka dari \eqref{3.4.8} diperoleh
+%     \begin{align}\label{a}
+%         \Bigg|\frac{am_{i}+bm_{i-1}}{a+b} - \frac{(a+b)m_{i-1}m_i}{am_{i-1}+bm_i}\Bigg|=O(h^2).
+%     \end{align}
+%     Diketahui bahwa
+%     \begin{gather*}
+%         \frac{am_i + bm_{i-1}}{a+b} = f'(x_i) + O(h^m),
+%     \end{gather*}
+%     sehingga dari Persamaan \eqref{a} didapatkan
+%     \begin{gather*}
+%         \Bigg|f'(x_i) - \frac{(a+b)m_{i-1}m_i}{am_{i-1}+bm_i}\Bigg|=O(h^2)+O(h^m)=O(h^{\min(m,2)}),
+%     \end{gather*}
+%     dapat disimpulkan bahwa
+%     \begin{gather*}
+%         \frac{(a+b)m_{i-1}m_i}{am_{i-1}+bm_i}= f'(x_i) + O(h^{\min(m,2)}).
+%     \end{gather*}
+% \end{proof}
+
+% Sebelum dibahas metode nonlinear numerik yang diberikan pada \cite{arandigaMN} agar hasil interpolasi yang dihasilkan monoton diberikan terlebih dahulu metode nonlinear dengan memanfaatkan \textit{weighted harmonic mean} dari $m_i$ dan $m_{i-1}$ yang didefinisikan pada \cite{arandigaOA} berupa
+
+Selain dengan memanfaatkan \textit{weighted arithmetic mean} dari $m_{i-1}$ dan $m_i$, untuk membentuk metode Aràndiga and Yáñez juga diperlukan \textit{weighted harmonic mean} dari $m_{i-1}$ dan $m_i$ yang didefinisikan sebagai
+
+\begin{align*}
+     W_{h_i,h_{i-1}}(m_{i-1},m_i) = \begin{cases}
+        \frac{(h_i + h_{i-1})m_{i-1}m_i}{h_im_i + h_{i-1}m_{i-1}}, \quad & m_{i}m_{i-1} \geq 0, \\
+        0, \quad & m_im_{i-1} < 0.
+    \end{cases}
+\end{align*}
+denagn memanfaatkan \textit{weighted arithmetic mean} dan \textit{weighted harmonic mean} dari $m_{i-1}$ dan $m_i$ maka akan diperoleh metode pendekatan untuk memperoleh nilai pendekatan turunan yang memenuhi syarat monoton interpolasi Hermite pada Teorema \ref{syaratHermite} dan memiliki tingkat akurasi order ketiga ketika $m_{i-1}m_{i} < 0$.  
+
+
+
+% Jika $f$ merupakan fungsi yang mulus dan $m_im_{i-1}>0$, maka $\dot{f}_i^W$ merupakan pendekatan turunan pertama yang memberikan pendekatan dengan tingkat keakuratan hingga order kedua. Hal ini diperoleh berdasarkan order akurasi dari $\dot{f}_i^P$ dan Lema \ref{3.4.9} yang menyebabkan
+% \begin{gather*}
+%     \dot{f}_i^W = f'(x_i) + O(h^2),
+% \end{gather*}
+% sehingga hasil interpolasi Hermite kubik yang diperoleh memiliki tingkat akurasi order ketiga.
+
+% Sebelum dibahas metode nonlinear numerik yang diberikan pada \cite{arandigaMN} agar hasil interpolasi yang dihasilkan monoton diberikan terlebih dahulu metode nonlinear  yang didefinisikan pada \cite{arandigaOA} berupa
+% \begin{align*}
+%     \dot{f}_i^A :=\begin{cases}
+%         \frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i}\frac{4m_im_{i-1}}{(m_i + m_{i-1})^2}, \quad & m_{i}m_{i-1} \geq 0, \\
+%         \hfil 0, \quad & m_im_{i-1} < 0.
+%     \end{cases}
+% \end{align*}
+% \begin{lemma}\label{FAOA}
+%     Jika $f$ fungsi yang mulus dan $m_im_{i-1}>0$, maka
+%     \begin{align*}
+%         \dot{f}_i^A=f'(x_i)+O(h^2)
+%     \end{align*}
+% \end{lemma}
+% \begin{proof}
+%     Diperhatikan bahwa
+%     \begin{align*}
+%         \frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i}\frac{4m_im_{i-1}}{(m_i + m_{i-1})^2}=\frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i}\Bigg(1-\frac{(m_i-m_{i-1})^2}{(m_i+m_{i-1})^2}\Bigg),
+%     \end{align*}
+%     sehingga 
+%     \begin{align*}
+%         \Bigg|\frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i} - \frac{(h_im_{i-1}+h_{i-1}m_i)(4m_im_{i-1})}{(h_{i-1}+h_i)(m_i + m_{i-1})^2}\Bigg|=&\Bigg|\frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i}\frac{(m_i-m_{i-1})^2}{(m_i+m_{i-1})^2}\Bigg| \\
+%         =&\Bigg|\frac{h_im_{i-1}+h_{i-1}m_i}{(h_{i-1}+h_i)(m_i+m_{i-1})^2}\Bigg||(m_i-m_{i-1})|^2.
+%     \end{align*}
+    
+%     Dikarenakan $m_i − m_{i-1} = O(h)$, maka diperoleh
+%     \begin{align}\label{a}
+%         \Bigg|\frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i} - \frac{(h_im_{i-1}+h_{i-1}m_i)(4m_im_{i-1})}{(h_{i-1}+h_i)(m_i + m_{i-1})^2}\Bigg|=O(h^2).
+%     \end{align}
+%     Dari \eqref{WAM} diperoleh
+%     \begin{align*}
+%         \frac{h_im_{i-1}+h_{i-1}m_i}{h_{i-1}+h_i} = f'(x_i)+O(h^2)
+%     \end{align*}
+%     sehingga Persamaan \eqref{a} dapat dituliskan sebagai
+%     \begin{align*}
+%         \Bigg|f'(x_i)- \frac{(h_im_{i-1}+h_{i-1}m_i)(4m_im_{i-1})}{(h_{i-1}+h_i)(m_i + m_{i-1})^2}\Bigg|=O(h^2),
+%     \end{align*}
+%     dapat disimpulkan bahwa
+%     \begin{align*}
+%         \dot{f}_i^A=f'(x_i)+O(h^2)
+%     \end{align*}
+% \end{proof}
+
+% Pendekatan turunan menggunakan $\dot{f}_i^A$ memberikan pendekatan dengan tingkat akurasi order kedua sehingga berdasarkan Lema \ref{orderAkurasi} hasil interpolasi Hermite kubik yang didapatkan memiliki tingkat akurasi order ketiga.
+
+% ---------------------------------------------
+
+\begin{lemma}\label{Wbound}
+    Jika $a,b > 0$ dan $xy>0$, maka
+    \begin{align*}
+        \Bigg|\frac{(a+b)xy}{ay+bx}\Bigg| \leq \omega \min(|x|,|y|),
+    \end{align*}
+    dengan $\omega = 2 \max(a,b)/\min(a,b)$.
+\end{lemma}
+
+\begin{proof}
+    Diasumsikan tanpa mengurangi keumuman $0 < y \leq x$ dan $0 < b \leq a$. Diperoleh
+    \begin{align*}
+        abxy + bbxy \leq 2abxy \leq 2abxy + 2aayy,
+    \end{align*}
+    sedemikian hingga
+    \begin{align*}
+        (a + b)bxy \leq 2abxy \leq 2ay(ay + bx),
+    \end{align*}
+    berakibat
+    \begin{align*}
+        \frac{(a + b)xy}{ay + bx}\leq 2\frac{a}{b}y.
+    \end{align*}
+\end{proof}
+
+Jika $a,b,p>0$ dan $x,y>0$, maka dengan memanfaatkan \textit{weighted harmonic mean} dari $x$ dan $y$ dapat didefinisikan
+\begin{align*}
+    H_{a,b,p}^+(x,y) := (W_{a,b}(x^p,y^p))^{1/p} = \frac{(a+b)^{1/p}}{(\frac{a}{x^p} + \frac{b}{y^p})^{1/p}} = \frac{(a+b)^{1/p}xy}{(bx^p + ay^p)^{1/p}},
+\end{align*}
+lalu didefinisikan
+\begin{align}\label{Habp}
+    H_{a,b,p}(x,y) = \begin{cases}
+        H_{a,b,p}^+(x,y), \quad & x,y>0,\\
+        -H_{a,b,p}^+(-x,-y), \quad & x,y<0,\\
+        0, \quad & xy \leq 0.
+    \end{cases}
+\end{align}
+
+\begin{lemma}\label{2prp}
+    Jika $a,b,p > 0$ dan $xy > 0$, maka fungsi $H_{a,b,p}(x,y)$ pada \eqref{Habp} memenuhi:
+    \begin{enumerate}
+        \item $|H_{a,b,p}(x,y)| \leq \omega^{1/p}\min(|x|,|y|)$, dengan $\omega = 2 \max(a,b)/\min(a,b)$.
+        \item Jika $x=O(1)$, $y=O(1)$, $|x-y|=O(h)$ dan $xy > 0$, maka
+        \begin{align*}
+            |M_{a,b}(x,y) - H_{a,b,p}(x,y)| = O(h^2).
+        \end{align*}
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    Tanpa mengurangi keumuman untuk membuktikan terpenuhinya pernyataan pertama diasumsikan $x,y > 0$. Berdasarkan Lema \ref{Wbound} diperoleh
+    \begin{align*}
+        |W_{a,b}(x,y)| \leq \omega \min(|x|,|y|),
+    \end{align*}
+    dengan $\omega = 2 \max(a,b)/\min(a,b)$ sedemikian hingga
+    \begin{align*}
+        |H_{a,b,p}(x,y)|=|(W_{a,b}(x^p,y^p))^{1/p}|\leq \omega^{1/p}\min(|x^p|,|y^p|)^{1/p} = \omega^{1/p}\min(|x|,|y|),
+    \end{align*}
+    berakibat pernyataan pertama terpenuhi.
+
+    Untuk membuktikan pernyataan kedua terpenuhi dibentuk fungsi $F$ dengan nilai $x$ tetap. Tanpa mengurangi keumuman diasumsikan $0 < x \leq y$, didefinisikan $F_{a,b,p,x}(y) := H_{a,b,p}(x,y)$, sehingga diperoleh
+    \begin{align*}
+        F_{a,b,p,x}(x)=x,
+    \end{align*}
+    dan
+    \begin{align*}
+        F_{a,b,p,x}'(y) = bx^{p+1}(a+b)^{\frac{1}{p}}(ay^p + bx^p)^{-\frac{p+1}{p}},
+    \end{align*}
+    menyebabkan
+    \begin{align*}
+        F_{a,b,p,x}'(x)=\frac{b}{a+b}.
+    \end{align*}
+    Dikarenakan $|x-y|=O(h)$, maka berdasarkan formula Taylor dari fungsi $F$ disekitar $x$, terdapat $x \leq z \leq y$ sehingga berlaku
+    \begin{align*}
+        F_{a,b,p,x}(y) =& F_{a,b,p,x}(x) + (y-x)F_{a,b,p,x}'(x) + (y-x)^2F_{a,b,p,x}''(z) \\
+        =& x + (y-x)\frac{b}{a+b} + O(h^2) = \frac{ax + by}{a+b} + O(h^2)\\
+        =& M_{a,b}(x,y) + O(h^2).
+    \end{align*}
+\end{proof}
+
+Didefinisikan pendekatan turunan
+\begin{align}
+    \dot{f}_i^{AY} := H_{h_i,h_{i-1},p_i}(m_{i-1},m_i). \label{dotf_AY}
+\end{align}
+dengan $p_i=\max(1,\frac{\log(\omega_i)}{\log(3)}),$ dan $\omega_i=2\max(h_{i-1},h_i)/\min(h_{i-1},h_i)$.
+
+\begin{teorema}
+    Misal $m_im_{i-1} > 0$. Jika hasil pendekatan turunan untuk interpolasi Hermite kubik diperoleh dari $\dot{f}_i^{AY}$, maka polinomial Hermite kubik yang dihasilkan monoton. Lebih lanjut, Jika $f$ merupakan fungsi yang mulus, maka polinomial Hermite kubik memiliki order akurasi tingkat ketiga.
+\end{teorema}
+
+\begin{proof}
+    Diperhatikan bahwa $m_im_{i-1} > 0$ sehingga berdasarkan Lema \ref{2prp} pada kondisi pertama untuk $\dot{f}_i^{AY}$ diperoleh
+    \begin{align*}
+        |\dot{f}_i^{AY}| = |H_{h_i,h_{i-1},p_i}(m_{i-1},m_i)| \leq \omega_i^{\frac{1}{p_i}}\min(|m_{i-1}|,|m_i|),
+    \end{align*}
+    dengan $\omega_i = 2\max(h_{i-1},h_i)/\min(h_{i-1},h_i)$ dan $p_i=\max(1,\frac{\log(\omega_i)}{\log(3)})$. Jika $\\\frac{\log(\omega_i)}{\log(3)} \leq 1$, maka diperoleh $\omega_i \leq 3$ dan $p_i=1$ sehingga berlaku
+    \begin{align*}
+        |\dot{f}_i^{AY}| \leq \omega_i\min(|m_{i-1}|,|m_i|) \leq 3 \min(|m_{i-1}|,|m_i|).
+    \end{align*}
+    Sebaliknya jika $\frac{\log(\omega_i)}{\log(3)} > 1$, maka diperoleh $p_i=\frac{\log(\omega_i)}{\log(3)}$ yang berakibat $\omega_i^{\frac{1}{p_i}} = 3$ sehingga berlaku
+    \begin{align*}
+        |\dot{f}_i^{AY}| \leq \omega_i^{\frac{1}{p_i}}\min(|m_{i-1}|,|m_i|) = 3 \min(|m_{i-1}|,|m_i|).
+    \end{align*}
+    Lebih lanjut, jika $f$ fungsi yang mulus, maka dari Lema \ref{orderAkurasi} dan kondisi kedua Lema \ref{2prp} diperoleh 
+    \begin{align*}
+            &&|M_{h_i,h_{i-1}}(m_{i-1},m_i) - \dot{f}_i^{AY}| = O(h^2) \\
+            &\Leftrightarrow&|f'(x_i) - \dot{f}_i^{AY}| = O(h^2),
+    \end{align*}
+    sehingga interpolasi Hermite kubik yang dihasilkan memiliki order akurasi  tingkat ketiga.
+\end{proof}

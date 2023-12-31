@@ -1,0 +1,94 @@
+\chapter{PENDAHULUAN}
+\section{Latar Belakang Masalah}
+% Penulisan latar belakang dan permasalahan disajikan dalam bentuk uraian yang secara kronologis diarahkan untuk langsung menuju rumusan masalah. Dalam latar belakang dan permasalahan dapat dimasukkan   beberapa   uraian   singkat   penelitian  terdahulu   yang   dapat   memperkuat   alasan   mengapa penelitian ini dilakukan. Apabila diperlukan, pada bagian ini dimungkinkan memuat hipotesis/dugaan secara umum.
+
+Metode interpolasi adalah metode numerik untuk menyisipkan titik baru di antara titik yang diberikan. Sebelumnya, penelitian terkait metode interpolasi telah dilakukan dalam karya \tpustaka{boor} yang meneliti tentang interpolasi polinomial secara sepotong-sepotong. Interpolasi polinomial secara sepotong-sepotong dikenal juga sebagai interpolasi spline. Pada umumnya metode interpolasi spline menghasilkan polinomial interpolasi dengan derajat yang lebih kecil dibandingkan interpolasi polinomial lainnya.
+
+Metode interpolasi spline kubik adalah salah satu interpolasi spline yang menghasilkan polinomial sepotong-sepotong dengan derajat kurang dari empat. Interpolasi spline kubik memiliki kekurangan pada hasil interpolasinya, yaitu hasil interpolasi belum tentu memiliki sifat monoton.
+
+Metode interpolasi digunakan dengan mempertimbangkan bagaimana sifat interpolasi yang dihasilkan. Salah satu sifat hasil interpolasi yang ingin dipertahankan adalah sifat monoton. Sifat monoton ingin dipertahankan dalam interpolasi, terutama jika data yang diberikan monoton. Dalam penelitian \tpustaka{fritsch} diteliti syarat-syarat cukup pada turunan pertama di titik-titik yang diberikan sehingga polinomial hasil interpolasi Hermite kubik memiliki sifat monoton.
+
+Berdasarkan hal tersebut dibentuk rumusan masalah dari skripsi ini, yaitu:
+\begin{enumerate}
+    \item Apakah dapat dibentuk interpolasi spline kubik yang monoton?
+    \item Bagaimana tingkat akurasi dari interpolasi spline kubik yang monoton?
+\end{enumerate}
+
+
+
+\section{Tujuan dan Manfaat Penelitian}
+% Tujuan penelitian berisikan penjelasan secara spesifik tentang hal-hal yang ingin dicapai melalui penelitian yang dilakukan. Manfaat yang diperoleh dari penelitian guna memberi penjelasan kemanfaatan bagi pengembangan penelitian atau aplikasinya.
+
+Tujuan penelitian ini dilakukan adalah sebagai berikut:
+\begin{enumerate}
+    \item Membentuk syarat cukup interpolasi Hermite kubik monoton.
+    \item Meneliti tingkat akurasi interpolasi Hermite kubik dengan turunan numerik sebagai pendekatan turunan pertama.
+    \item Membentuk metode spline kubik berbasis polinomial Hermite kubik sehingga syarat cukup agar interpolasi Hermite kubik menghasilkan interpolasi yang monoton juga berlaku pada interpolasi spline kubik yang dibentuk.
+    \item Meneliti tingkat akurasi interpolasi apline kubik monoton yang dibentuk.
+    \item Memberikan metode interpolasi alternatif, ketika metode interpolasi spline kubik tidak memenuhi syarat cukup untuk memperoleh interpolasi yang monoton.
+    \item Meneliti tingkat akurasi metode interpolasi alternatif spline kubik monoton.
+\end{enumerate}
+
+Metode interpolasi yang monoton bermanfaat dalam menginterpolasi fungsi yang tidak kontinu atau memiliki gradien yang sangat besar sehingga grafiknya sangat curam pada suatu titik. pada umumnya fungsi tidak kontinu yang diinterpolasi secara spline mengalami osilasi di sekitar titik tidak kontinu. Hal ini menyebabkan hasil interpolasi menjadi tidak akurat di sekitar titik tidak kontinu. Metode interpolasi monoton juga bermanfaat dalam menginterpolasi data yang monoton sehingga sifat monotonnya dapat dipertahankan.
+
+\section{Tinjauan Pustaka}
+% Tinjauan pustaka memuat uraian sistematis tentang informasi hasil penelitian yang disajikan dalam pustaka   dan   menghubungkannya   dengan   masalah   penelitian   yang   sedang   diteliti.   Fakta-fakta  yang dikemukakan sejauh mungkin diacu dari sumber aslinya, dengan mengikuti cara sitasi nama dan tahun dalam kurung biasa.
+
+% Berikut ini merupakan contoh penulisan citation: \tpustaka{buc}.
+
+Persamaan linear adalah sebuah persamaan yang melibatkan jumlahan $n$ buah variabel tanpa ada perkalian antar variabelnya. Sejumlah persamaan linear dengan variabel yang sama dapat membentuk sebuah sistem persamaan linear yang ketika diselesaikan bisa saja memiliki solusi tunggal, tak berhingga, atau bahkan solusinya tidak ada. Matriks adalah rangkaian angka yang membentuk sebuah persegi panjang yang elemen-elemennya menempati sebuah baris dalam kolom tertentu. Penjabaran lebih lanjut terkait sistem persamaan linear, matriks, dan vektor diambil dari buku karya \tpustaka{howard} dan \tpustaka{olver}.
+
+Fungsi merupakan sebuah pemetaan dari suatu himpunan ke himpunan lain. Salah satu contoh fungsi pada himpunan bilangan real di antaranya adalah fungsi polinomial. Fungsi polinomial pada suatu interval merupakan fungsi kontinu. Turunan fungsi adalah pengukuran terkait perubahan nilai fungsi berdasarkan nilai inputnya. Penjabaran tentang sifat-sifat dari fungsi kontinu dan turunan fungsi diambil dari buku karya \tpustaka{bartle} dan \tpustaka{thomas}.
+
+Metode interpolasi merupakan metode untuk menemukan fungsi untuk menysipkan titik baru di antara titik yang diberikan. Metode interpolasi yang menghasilkan fungsi polinomial disebut sebagai interpolasi polinomial. Ada banyak sekali metode interpolasi polinomial di antaranya adalah metode interpolasi Hermite, spline kubik, dan beda bagi. Pada penelitian ini, akan diteliti tentang pengembangan dari metode spline kubik. Dalam pengembangan metode tersebut, diambil referensi tentang sifat metode interpolasinya dari buku karya \tpustaka{burden}, \tpustaka{boor}, dan \tpustaka{atkinson}.
+
+Dalam proses interpolasi titik terkadang ada sifat khusus dari titik-titik yang ingin kita pertahankan, salah satunya adalah sifat kemonotonan. Interpolasi monoton merupakan metode interpolasi yang bertujuan untuk mempertahankan kemonotonan titik yang diinterpolasi. Selain untuk mempertahankan kemonotonan titik yang kita interpolasikan, interpolasi monoton juga bermanfaat untuk membatasi hasil interpolasi sehingga tidak terjadi osilasi. Hal ini dijelaskan pada halaman yang ditulis \tpustaka{bird}.
+
+Interpolasi Hermite kubik merupakan interpolasi yang membagi data menjadi interval-interval tertentu sehingga derajat dari polinomial hasil interpolasi datanya menjadi tidak terlalu besar. Interpolasi Hermite kubik dapat memiliki sifat monoton dengan memberikan syarat-syarat tambahan. Syarat-syarat tambahan ini dijelaskan pada jurnal \tpustaka{fritsch}.
+
+Pada \tpustaka{aràndiga} dijelaskan bagaimana membentuk meotde interpolasi spline kubik berbasis pada polinomial hermite kubik. Metode interpolasi spline kubik yang dihasilkan memiliki sifat monoton apabila syarat tambahan yang dijelaskan oleh \tpustaka{fritsch} terpenuhi. Selain membentuk meotde interpolasi spline kubik berbasis pada polinomial hermite kubik, diberikan juga metode nonlinear sehingga hasil interpolasi spline kubik memenuhi syarat tambahan tersebut.
+
+Dalam pengembanganya, interpolasi spline kubik monoton penentuan order akurasi dari interpolasinya diperoleh dengan menggunakan teorema pada jurnal \tpustaka{stoer} yang memanfaatkan order akurasi dari turunan pertama pada titik-titik yang diinterpolasi. Jurnal \tpustaka{kershaw1972} dan \tpustaka{kershaw} menjelaskan teorema yang digunakan untuk membuktikan teorema  sehingga order akurasi dari interpolasi yang diperoleh optimal.
+
+Jurnal \tpustaka{fritschMN} menjelaskan tentang meotde numerik untuk memperoleh turunan pertama sehingga hasil interpolasi spline kubik memenuhi syarat cukup monoton. Metode numerik yang dijelaskan pada jurnal \tpustaka{fritschMN} memiliki tingkat akurasi order pertama.
+
+Metode numerik yang lebih baik untuk memperoleh turunan pertama dijelaskan di dalam jurnal \tpustaka{arandigaMN}. Hal ini dikarenakan berdasarkan teorema yang dijelaskan dalam jurnal \tpustaka{arandigaOA}, turunan pertama yang dihasilkan memiliki tingkat akurasi order kedua.
+
+\section{Metodologi Penelitian}
+% Bagian ini memuat langkah-langkah yang akan ditempuh di dalam penelitian.
+
+Skripsi ini dituliskan berbasis studi literatur. Dalam studi literatur ini dipelajari tentang sistem persamaan linear, polinomial, operasi matriks dan vektor, turunan, teorema Taylor, dan interpolasi. Langkah-langkah yang dilakukan dalam melakukan penelitian di dalam skripsi ini adalah sebagai berikut:
+
+\begin{enumerate}
+    \item Mempelajari mengenai sifat-sifat dari interpolasi Hermite kubik serta menentukan hubungan interpolasi Hermite kubik dengan turunan pada titik-titik yang diinterpolasi terhadap sifat monoton dari polinomial interpolasi yang dihasilkan.
+    \item Mengkaji pembentukan interpolasi spline kubik monoton yang berbasis pada polinomial interpolasi Hermite kubik sehingga hubungan turunan pada setiap titik-titik yang diinterpolasi terhadap sifat monoton dari polinomial interpolasi yang dihasilkan bisa tetap dipertahankan.
+    \item Mengkaji metode alternatif dari metode spline kubik yang dikaji sebelumnya ketika syarat-syarat agar hasil interpolasi bersifat monoton tidak terpenuhi.
+    \item Melakukan simulasi penggunaan metode interpolasi yang diteliti dalam menginterpolasi fungsi yang tidak kontinu dengan bahasa pemrograman \textit{Python}.
+\end{enumerate}
+
+Selanjutnya, hasil penelitian ini ditulis dan disajikan secara sistematis dengan teori yang sesuai.
+
+\section{Sistematika Penulisan}
+% Bagian ini berisi tentang paparan garis-garis besar isi tiap bab.
+
+Skripsi ini ditulis terdiri dari 6 bab dengan sistematika penulisan sebagai berikut.
+
+\noindent\textbf{BAB I PENDAHULUAN}
+
+Pada bab ini dijelaskan tentang latar belakang dilakukannya penelitian ini serta tujuan dan tinjauan dari pustaka yang digunakan.
+
+\noindent\textbf{BAB II DASAR TEORI}
+
+Bab ini berisi dasar teori yang digunakan dalam penelitian ini tentang matriks dan vektor, turunan, dan interpolasi.
+
+\noindent\textbf{BAB III HERMITE KUBIK MONOTON}
+
+Di dalam bab ini dijelaskan tentang bagaimana membentuk interpolasi Hermite kubik serta syarat cukup sehingga hasil interpolasi Hermite kubik yang dihasilkan memiliki sifat monoton.
+
+\noindent\textbf{BAB IV SPLINE KUBIK MONOTON}
+
+Bab ini mengkaji tentang interpolasi spline kubik yang dibentuk berbasiskan polinomial Hermite kubik serta metode interpolasi alternatif ketika syarat cukup monoton tidak terpenuhi dengan metode spline kubik.
+
+\noindent\textbf{BAB V EKSPERIMEN NUMERIK}
+
+Pada bab ini dilakukan eksperimen numerik dengan melakukan simulasi untuk menginterpolasi beberapa buah kasus, salah satunya adalah kasus ketika fungsi yang diinterpolasi mempunyai titik tidak kontinu.
